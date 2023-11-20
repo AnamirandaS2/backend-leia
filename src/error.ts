@@ -3,15 +3,15 @@ import { Request, Response, NextFunction } from "express"
 export class AppError extends Error {
     public readonly status: number
 
-    constructor(_status: number = 400, _message: string) {
+    constructor(_message: string, _status: number = 400,) {
         super(_message)
         this.status = _status
     }
 }
 
-export const errorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
+export async function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
 
-    if (err.status !== 500) {
+    if (err instanceof AppError) {
         return res.status(err.status).json({ message: err.message });
     }
 
@@ -20,5 +20,5 @@ export const errorHandler = (err: AppError, req: Request, res: Response, next: N
         return;
       }
     
-    res.status(500).json({ message: "Internal server error." })
+    res.status(500).json({ message: "Error interno do servidor." })
 }

@@ -2,41 +2,23 @@ import express, { Express } from 'express'
 import 'express-async-errors'
 import 'dotenv/config'
 import { errorHandler } from './utils/error'
-import User from './routes/user'
-import Auth from './routes/Auth'
 import Book from './routes/Book'
 import Activity from './routes/Activity'
 import Review from './routes/Review'
+import useRouter from './routes/user.route'
+import cors from 'cors'
+
+const app = express();
+
+app.use(cors())
+app.use(express.json());
+
+app.use('/user', useRouter);
+app.use('/book', Book);
+app.use('/activity', Activity);
+app.use('/review', Review);
+
+app.use(errorHandler)
 
 
-class App {
-    readonly app: Express;
-    constructor()
-    {
-        this.app = express();
-        this.middlewares();
-        this.routes();
-    }
-
-    middlewares()
-    {
-
-    }
-    
-    routes() 
-    {
-        this.app.use('/user', User);
-        this.app.use('/auth', Auth);
-        this.app.use('/book', Book);
-        this.app.use('/activity', Activity);
-        this.app.use('/review', Review);
-    }
-
-    error()
-    {
-        this.app.use(errorHandler)
-    }
-
-}
-
-export default new App().app;
+export default app;
