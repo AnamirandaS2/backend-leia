@@ -9,11 +9,57 @@ datasource db {
 
 model User {
   id                String      @id@default(uuid())
+  name              String      
+  email             String      @unique
+  password          String
+  avatar            String?
+
+  approved          Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
+}
+
+model Admin {
+  id                String      @id@default(uuid())
   name              String
-  email             String
-  password          String?
+  email             String      @unique
+  password          String
   avatar            String?
 
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
+}
+
+model Book {
+  id                String      @id@default(uuid())
+  title             String
+  description       String
+  author            String
+  cover             String
+  genre             String[]
+  pages             Int
+  enabled           Boolean     @default(true)
+  
+  publishedAt       DateTime
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
+
+  @@unique([title, author])
+}
+
+model Review {
+  id                String      @id@default(uuid())
+  title             String
+  description       String
+  content           String
+  approved          Boolean     @default(false)
+  finished          Boolean     @default(false)
+
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @default(now())
+}
+
+model Activity {
+  
 }
