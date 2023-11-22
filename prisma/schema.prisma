@@ -14,6 +14,7 @@ model User {
   password          String
   avatar            String?
   reviews           Review[]
+  authorityLevel    Int         @default(1)
 
   approved          Boolean     @default(false)
   createdAt         DateTime    @default(now())
@@ -65,6 +66,3 @@ model Review {
 // model Activity {
 //
 // }
-
-// 1 review, 1 book
-
