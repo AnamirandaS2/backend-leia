@@ -37,6 +37,7 @@ model Book {
   title             String
   description       String
   author            String
+  source            String
   cover             String
   genre             String[]
   pages             Int
