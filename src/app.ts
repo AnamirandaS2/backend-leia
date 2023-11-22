@@ -5,6 +5,7 @@ import { errorHandler } from './utils/error'
 import Book from './routes/Book'
 import Activity from './routes/Activity'
 import Review from './routes/Review'
+import Admin from './routes/Admin'
 import useRouter from './routes/user.route'
 import cors from 'cors'
 
@@ -14,6 +15,7 @@ app.use(cors())
 app.use(express.json());
 
 app.use('/user', useRouter);
+app.use('/Admin', Admin)
 app.use('/book', Book);
 app.use('/activity', Activity);
 app.use('/review', Review);
