@@ -1,7 +1,7 @@
 import express, { Express } from 'express'
 import 'express-async-errors'
 import 'dotenv/config'
-import { errorHandler } from './utils/error'
+import { errorHandler } from './error'
 import Book from './routes/Book'
 import Activity from './routes/Activity'
 import Review from './routes/review.route.'

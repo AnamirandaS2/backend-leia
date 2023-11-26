@@ -3,8 +3,11 @@ import { AppError } from '../../error';
 import { verify } from 'jsonwebtoken'
 import prisma from '../../database/db';
 
-export default async function checkToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+export default async function checkToken(req: Request, res: Response, next: NextFunction) {
     const { authorization } = req.headers;
+
+    if (!authorization) throw new AppError("Token não informado", 401);
+    
     const [ , token ] = authorization.split(' ');
 
     if(!token) throw new AppError("Token não informado", 401);

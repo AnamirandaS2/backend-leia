@@ -1,6 +1,6 @@
 import supabase from "../../database/bucket";
 import prisma from "../../database/db";
-import * as fs from 'node:fs'
+import * as fs from 'fs/promises'
 import path from 'node:path'
 
 interface Props {
@@ -21,10 +21,9 @@ export default async function createReviewService({ bookId, content, title, user
         });
     }
     
-    await fs.appendFile(`./${bookId}.md`, content, ()=>{
-    });
+    await fs.appendFile(`./${bookId}.md`, content);
 
-    const file = fs.readFileSync(`./${bookId}.md`)
+    const file = await fs.readFile(`./${bookId}.md`)
     
     await supabase.storage.from('reviews').upload(`${title} - ${name}`, file, {
         cacheControl: '3600',
@@ -32,13 +31,13 @@ export default async function createReviewService({ bookId, content, title, user
         contentType: 'text/markdown',
     });
     
-    fs.rmSync(`./${bookId}.md`);
+    await fs.rm(`./${bookId}.md`);
     const review = await prisma.review.create({ data: {
         title,
         userId,
         bookId,
     }});
     
-    return { ...review, id: undefined, userId: undefined };
+    return { ...review, userId: undefined };
 
 }
