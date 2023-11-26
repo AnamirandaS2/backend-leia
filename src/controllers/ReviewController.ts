@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import createReviewService from "../services/review/createReview.service";
+import queryReviewsService from "../services/review/queryReviews.service";
 
 export async function fetchReview(req: Request, res: Response) {
 
@@ -19,9 +20,21 @@ export async function putReview(req: Request, res: Response) {
 }
 
 export async function sendReview(req: Request, res: Response) {
+    return res.status(200).json({ message: 'sendReview' });
+}
 
+interface Queries {
+    reviewTitle: string
+    userName: string
+    from: string
+    to: string
+    bookTitle: string
+    bookAuthor: string
 }
 
 export async function queryReviews(req: Request, res: Response) {
+    const queries = req.query as unknown as Queries;
+    const reviews = await queryReviewsService(queries);
 
+    return res.status(200).json(reviews); 
 }
