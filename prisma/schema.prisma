@@ -52,13 +52,12 @@ model Book {
 
 model Review {
   id                String      @id@default(uuid())
+  userId            String
   bookId            String
   title             String
-  description       String
-  content           String
   approved          Boolean     @default(false)
   finished          Boolean     @default(false)
-  user              User        @relation(fields: [id], references: [id])
+  user              User        @relation(fields: [userId], references: [id])
   book              Book        @relation(fields: [bookId], references: [id])
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())

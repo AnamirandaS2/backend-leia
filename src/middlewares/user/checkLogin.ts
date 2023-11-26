@@ -6,7 +6,6 @@ import prisma from '../../database/db';
 export default async function checkLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { email, password } = req.body;
 
-    // Aqui é onde o email é comparado com o email do banco de dados
     const user = await prisma.user.findFirst({ where: { email } });
     if(!user) throw new AppError('Email ou senha inválidos', 401);
 
