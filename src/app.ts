@@ -8,6 +8,7 @@ import Review from './routes/review.route.'
 import Admin from './routes/Admin'
 import useRouter from './routes/user.route'
 import cors from 'cors'
+import Suport from './routes/Suport'
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/Admin', Admin)
 app.use('/book', Book);
 app.use('/activity', Activity);
 app.use('/review', Review);
+app.use('/suport', Suport);
 
 app.use(errorHandler)
 
