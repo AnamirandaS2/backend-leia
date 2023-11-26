@@ -1,8 +1,12 @@
 import { Request, Response } from "express";
 import createReviewService from "../services/review/createReview.service";
+import findReviewByIdService from "../services/review/findReviewById.service";
 
 export async function fetchReview(req: Request, res: Response) {
+    const reviewId  = req.params;
+    const review = await findReviewByIdService(reviewId.toString())
 
+    return res.status(200).json(review);
 }
 
 export async function createReview(req: Request, res: Response) {
