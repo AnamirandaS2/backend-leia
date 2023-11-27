@@ -14,7 +14,6 @@ model User {
   password          String
   avatar            String?
   reviews           Review[]
-  authorityLevel    Int         @default(1)
 
   approved          Boolean     @default(false)
   createdAt         DateTime    @default(now())
@@ -27,6 +26,7 @@ model Admin {
   email             String      @unique
   password          String
   avatar            String?
+  authorityLevel    Int         @default(1)
 
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
@@ -39,7 +39,7 @@ model Book {
   author            String
   source            String
   cover             String
-  genre             String[]
+  genre             String
   pages             Int
   enabled           Boolean     @default(true)
   reviews           Review[]
