@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import { AppError } from "../../error";
-import prisma from "../../database/db";
+import { NextFunction, Request, Response } from 'express';
+import { AppError } from '../../error';
+import prisma from '../../database/db';
 
 export default async function checkReviewIsFromUser(req: Request, res: Response, next: NextFunction) {
     const { reviewId } = req.query as { reviewId: string };

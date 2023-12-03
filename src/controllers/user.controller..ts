@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import registerService from "../services/user/register";
-import generateToken from "../services/user/login";
+import { Request, Response } from 'express';
+import registerService from '../services/user/register';
+import generateToken from '../services/user/login';
 
 
 export async function registerController(req: Request, res: Response)
@@ -19,13 +19,13 @@ export function loginController(req : Request, res : Response)
     return res.status(200).json({ token });
 }
 
-export async function forgot(req : Request, res : Response)
+export async function forgot()
 {
 
 }
 
 export async function updateUser(req: Request, res: Response)
 {
-    console.log("ok!")
-    return res.status(200).json({"message" : "user atualizado!"});
+    console.log('ok!');
+    return res.status(200).json({'message' : 'user atualizado!'});
 }

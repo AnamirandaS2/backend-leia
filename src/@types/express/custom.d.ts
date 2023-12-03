@@ -10,5 +10,5 @@
     }
   }
   
-  export default global;
+export default global;
   

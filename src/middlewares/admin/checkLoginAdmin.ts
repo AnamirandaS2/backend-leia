@@ -17,7 +17,7 @@ export default async function checkLogin(req: Request, res: Response, next: Next
         id: userAdmin.id,
         name: userAdmin.name,
         email: userAdmin.email,
-    }
+    };
 
     return next();
 }

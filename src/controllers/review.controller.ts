@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import createReviewService from "../services/review/createReview.service";
-import findReviewByIdService from "../services/review/findReviewById.service";
-import queryReviewsService from "../services/review/queryReviews.service";
+import { Request, Response } from 'express';
+import createReviewService from '../services/review/createReview.service';
+import findReviewByIdService from '../services/review/findReviewById.service';
+import queryReviewsService from '../services/review/queryReviews.service';
 
 export async function fetchReview(req: Request, res: Response) {
-    const reviewId  = req.params;
-    const review = await findReviewByIdService(reviewId.toString())
+    const { id } = req.params as { id: string };
+    const review = await findReviewByIdService(id);
 
     return res.status(200).json(review);
 }
@@ -19,7 +19,7 @@ export async function createReview(req: Request, res: Response) {
     return res.status(201).json(review);
 }
 
-export async function putReview(req: Request, res: Response) {
+export async function putReview() {
 
 }
 

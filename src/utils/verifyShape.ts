@@ -1,9 +1,8 @@
-import { NextFunction, Request, Response } from "express";
-import { ObjectSchema } from "yup";
-import { ObjectShape } from "yup";
+import { NextFunction, Request, Response } from 'express';
+import { ObjectSchema } from 'yup';
 
 const verifyShape =
-    (serialize: ObjectSchema<ObjectShape | any>) =>
+    (serialize: ObjectSchema<object>) =>
         async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const validated = await serialize.validate(req.body, {
@@ -12,7 +11,7 @@ const verifyShape =
                 });
                 req.body = validated;
                 return next();
-            } catch (error: any) {
+            } catch (error) {
                 return res.status(400).json({ message: error.errors });
             }
         };

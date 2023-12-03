@@ -1,4 +1,4 @@
-import prisma from "../../database/db"
+import prisma from '../../database/db';
 
 interface Props {
     bookTitle?: string;
@@ -46,16 +46,16 @@ export default async function queryReviewsService({
         },
         include: {
             book: {
-               select: {
-                author: true,
-                title: true,
-               } 
+                select: {
+                    author: true,
+                    title: true,
+                } 
             }
         },
-    })
+    });
     
     return reviews.map(review => {
         delete review.userId;
-        return { ...review }
-    })
+        return { ...review };
+    });
 }

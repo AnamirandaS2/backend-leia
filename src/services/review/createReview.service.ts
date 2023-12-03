@@ -1,7 +1,6 @@
-import supabase from "../../database/bucket";
-import prisma from "../../database/db";
-import * as fs from 'fs/promises'
-import path from 'node:path'
+import supabase from '../../database/bucket';
+import prisma from '../../database/db';
+import * as fs from 'fs/promises';
 
 interface Props {
     content: string;
@@ -23,7 +22,7 @@ export default async function createReviewService({ bookId, content, title, user
     
     await fs.appendFile(`./${bookId}.md`, content);
 
-    const file = await fs.readFile(`./${bookId}.md`)
+    const file = await fs.readFile(`./${bookId}.md`);
     
     await supabase.storage.from('reviews').upload(`${title} - ${name}`, file, {
         cacheControl: '3600',
