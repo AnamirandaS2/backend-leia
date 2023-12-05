@@ -34,7 +34,7 @@ model Admin {
 
 model Book {
   id                String      @id@default(uuid())
-  title             String
+  title             String      @unique
   description       String
   author            String
   source            String
@@ -46,6 +46,7 @@ model Book {
   publishedAt       DateTime
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
+
   sentAt            DateTime?
   @@unique([title, author])
 }
