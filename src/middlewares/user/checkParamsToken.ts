@@ -1,20 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 
 import prisma from '../../database/db';
 import { AppError } from '../../error';
 
-export default async function checkToken(req: Request, res: Response, next: NextFunction) {
-  const { authorization } = req.headers;
-
-  if (!authorization) throw new AppError('Token não informado', 401);
+export default async function checkParamsToken(req: Request, res: Response, next: NextFunction) {
+  const { token } = req.params;
     
-  const [ , token ] = authorization.split(' ');
-
   if(!token) throw new AppError('Token não informado', 401);
-    
+  
   try {
-    req.user.id = (verify(token, process.env.JWT_SECRET) as {id: string}).id;
+    const { id } = verify(token, process.env.JWT_SECRET) as { id: string };
+    req.user = { id };
   } catch(err) {
     throw new AppError('Token inválido', 404);
   }
@@ -30,5 +27,4 @@ export default async function checkToken(req: Request, res: Response, next: Next
   };
   
   return next();
-
 }

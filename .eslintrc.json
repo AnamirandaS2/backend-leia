@@ -5,7 +5,9 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/errors", 
+        "plugin:import/warnings"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -13,12 +15,13 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "import"
     ],
     "rules": {
         "indent": [
             "error",
-            4
+            2
         ],
         "linebreak-style": [
             "error",
@@ -31,6 +34,65 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "@typescript-eslint/member-delimiter-style": [
+            "error",
+            {
+                "multiline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                },
+                "singleline": {
+                    "delimiter": "semi",
+                    "requireLast": false
+                }
+            }
+        ],
+        "prefer-template": "error",
+        "comma-spacing": "error",
+        "no-duplicate-imports": "error",
+        "no-useless-return": "error",
+        "no-invalid-regexp": "error",
+        "prefer-destructuring": "error",
+        "prefer-const": "error",
+        "import/order": [
+            "error",
+            {
+              "newlines-between": "always",
+              "groups": ["builtin", "external", "internal", "parent", "sibling", "object"],
+              "alphabetize": {
+                "order": "asc",
+                "caseInsensitive": false
+              },
+              "pathGroups": [
+                {
+                  "pattern": "@/**",
+                  "group": "external",
+                  "position": "after"
+                }
+              ],
+              "pathGroupsExcludedImportTypes": ["builtin"]
+            }
+        ],
+        "no-extra-semi": "error",
+        "no-multiple-empty-lines": [
+            "error",
+            { 
+                "max": 1, 
+                "maxEOF": 0 
+            }
+        ],
+        "import/extensions": [
+            "error",
+            {
+                "ts": "never",
+                "js": "never",
+                "schema": "ignorePackages",
+                "controller": "ignorePackages",
+                "service": "ignorePackages",
+                "interface": "ignorePackages"
+            }
+         ],
+        "import/no-unresolved": "off"
     }
 }

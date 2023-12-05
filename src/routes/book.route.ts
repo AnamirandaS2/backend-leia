@@ -1,9 +1,15 @@
 import { Router } from 'express';
+import multer from 'multer';
+
+import { addBook, deleteBook, filterBook, pickUpBook, updateBook } from '../controllers/book.controller';
 import checkTokenAdmin from '../middlewares/admin/checkTokenAdmin';
 import checkBook from '../middlewares/book/checkBook'
 import storage from '../middlewares/multerConfig';
+<<<<<<< HEAD
 import multer from 'multer';
 import { addBook, deleteBook, filterBook, downloadBook, viewBook, updateBook,  } from '../controllers/book.controller';
+=======
+>>>>>>> main
 
 const router = Router();
 const upload = multer({ storage: storage });
@@ -18,6 +24,5 @@ router.post('', checkTokenAdmin, upload.fields([{name:'book', maxCount: 1}, {nam
 
 router.put('/:id', updateBook);
 router.delete('/:id', deleteBook);
-
 
 export default router;
