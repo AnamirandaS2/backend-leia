@@ -12,7 +12,7 @@ export default async function checkToken(req: Request, res: Response, next: Next
   const [ , token ] = authorization.split(' ');
 
   if(!token) throw new AppError('Token não informado', 401);
-    
+  req.user = {};  
   try {
     req.user.id = (verify(token, process.env.JWT_SECRET) as {id: string}).id;
   } catch(err) {

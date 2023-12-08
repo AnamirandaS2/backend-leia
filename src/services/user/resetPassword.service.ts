@@ -1,4 +1,4 @@
-import hash from 'bcrypt';
+import { hashSync } from 'bcrypt';
 
 import prisma from '../../database/db';
 
@@ -6,7 +6,7 @@ export default async function resetPasswordService(id: string, newPassword: stri
   await prisma.user.update({ 
     where: { id }, 
     data: { 
-      password: hash.hashSync(newPassword, 12)
+      password: hashSync(newPassword, 12)
     } 
   });
 }

@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
-import { forgotPasswordController, loginController, registerController, resetPasswordController } from '../controllers/user.controller.';
+import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController } from '../controllers/user.controller.';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
 import checkLogin from '../middlewares/user/checkLogin';
 import checkParamsToken from '../middlewares/user/checkParamsToken';
 import checkToken from '../middlewares/user/checkToken';
-import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema } from '../schemas/user.schema';
+import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema, updateSchema } from '../schemas/user.schema';
 import verifyShape from '../utils/verifyShape';
 
 const useRouter = Router();
@@ -19,6 +19,7 @@ useRouter.post('/login', verifyShape(loginSchema), checkLogin, loginController);
 
 useRouter.post('/forgot-password', verifyShape(forgotPasswordSchema), checkEmailExistence, forgotPasswordController);
 useRouter.post('/recuperar-senha/:token', verifyShape(resetPasswordSchema), checkParamsToken, resetPasswordController);
-useRouter.get('', checkToken);
+
+useRouter.put('', verifyShape(updateSchema), checkToken, updateController);
 
 export default useRouter;

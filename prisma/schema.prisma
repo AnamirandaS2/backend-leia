@@ -39,7 +39,7 @@ model Book {
   author            String
   source            String
   cover             String
-  genre             String
+  genre             String[]
   pages             Int
   enabled           Boolean     @default(true)
   reviews           Review[]

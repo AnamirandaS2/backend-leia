@@ -4,6 +4,7 @@ import forgotPasswordService from '../services/user/forgotPassword.service';
 import generateToken from '../services/user/generateToken.service';
 import registerService from '../services/user/register';
 import resetPasswordService from '../services/user/resetPassword.service';
+import updateService from '../services/user/update.service';
 
 export async function registerController(req: Request, res: Response)
 {
@@ -49,4 +50,14 @@ export async function resetPasswordController(req: Request, res: Response)
   await resetPasswordService(id, newPassword);
 
   return res.status(200).json({ message: 'Senha alterada com sucesso!' });
+}
+
+export async function updateController(req: Request, res: Response)
+{
+  const { name, password, avatar } = req.body;
+  const { id } = req.user;
+
+  const user = await updateService({ id, name, password, avatar });
+
+  return res.status(200).json(user);
 }
