@@ -26,8 +26,8 @@ export const resetPasswordSchema = yup.object().shape({
 
 export const updateSchema = yup.object().shape({
   name: yup.string().min(3).max(50),
-  passord: yup.string().min(passwordSize.min).max(passwordSize.max),
+  password: yup.string().min(passwordSize.min).max(passwordSize.max),
   avatar: yup.string().url(),
-}).test('at-least-one-property', 'you must provide at least one', value =>
-  !!(value.name || value.passord || value.avatar)
+}).test('at-least-one-property', 'Você deve informar qual campo deseja alterar: nome, senha ou avatar', value =>
+  !!(value.name || value.password || value.avatar)
 );

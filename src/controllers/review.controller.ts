@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 
 import createReviewService from '../services/review/createReview.service';
-import findReviewByIdService from '../services/review/findReviewById.service';
+import findReviewService from '../services/review/findReview.service';
 import getAdminEmailsService from '../services/review/getAdminEmails.service';
 import queryReviewsService from '../services/review/queryReviews.service';
 import sendReviewService from '../services/review/sendReview.service';
 import updateReviewService from '../services/review/updateReview.service';
 
 export async function fetchReview(req: Request, res: Response) {
-  const { id } = req.params as { id: string };
-  const review = await findReviewByIdService(id);
+  const { title } = req.review;
+  const { name } = req.user;
+  const review = await findReviewService(name, title);
 
   return res.status(200).json(review);
 }
@@ -26,8 +27,8 @@ export async function createReview(req: Request, res: Response) {
 export async function updateReview(req: Request, res: Response) {
   const { newTitle, newContent } = req.body as { newTitle?: string; newContent?: string };
   const { name: reviewerName } = req.user;
-  const { title } = req.review;
-  await updateReviewService({ newTitle, newContent, reviewerName, title });
+  const { title, id: reviewId } = req.review;
+  await updateReviewService({ newTitle, newContent, reviewerName, title, reviewId });
 
   return res.status(200).json({ message: 'Review updated' });
 }

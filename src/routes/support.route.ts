@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import verifyShape from '../utils/verifyShape';
-import { supportSchema } from '../schemas/support.schema'; 
+
 import { supportController } from '../controllers/support.controller';
+import { supportSchema } from '../schemas/support.schema'; 
+import verifyShape from '../utils/verifyShape';
 
 const support = Router();
 

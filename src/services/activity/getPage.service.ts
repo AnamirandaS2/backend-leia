@@ -1,0 +1,17 @@
+import prisma from '../../database/db';
+
+export default async function getPageService(bookId: string, userId: string) {
+  const page = await prisma.activity.findUnique({
+    where: {
+      userId_bookId: {
+        bookId,
+        userId,
+      },
+    },
+    select: {
+      page: true
+    }
+  });
+
+  return page;
+}

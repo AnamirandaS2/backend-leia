@@ -90,7 +90,8 @@
                 "schema": "ignorePackages",
                 "controller": "ignorePackages",
                 "service": "ignorePackages",
-                "interface": "ignorePackages"
+                "interface": "ignorePackages",
+                "route": "ignorePackages"
             }
          ],
         "import/no-unresolved": "off"

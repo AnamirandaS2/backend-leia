@@ -9,12 +9,11 @@ export default async function updateService({ id, name, password, avatar }) {
   password && (newInfo.password = hashSync(password, 12));
   avatar && (newInfo.avatar = avatar);
       
-  console.error('IJDAWIOsjdiosajidjwio');
   const user = await prisma.user.update({
     where: {
       id,
     },
-    data: { ...newInfo },
+    data: { ...newInfo, updatedAt: new Date() },
     select: {
       name: !!name,
       avatar: !!avatar,

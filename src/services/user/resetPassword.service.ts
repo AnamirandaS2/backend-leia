@@ -6,7 +6,8 @@ export default async function resetPasswordService(id: string, newPassword: stri
   await prisma.user.update({ 
     where: { id }, 
     data: { 
-      password: hashSync(newPassword, 12)
+      password: hashSync(newPassword, 12),
+      updatedAt: new Date(),
     } 
   });
 }

@@ -39,6 +39,6 @@ export default async function createReviewPdfService({ bookTitle, content, date,
   };
 
   const review = await pdf.create(document, options);
-  console.error(review, 'aaaaaaaaaaaaaa');
+
   return review;
 }

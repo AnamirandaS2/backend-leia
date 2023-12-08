@@ -22,17 +22,6 @@ export function loginController(req : Request, res : Response)
   return res.status(200).json({ token });
 }
 
-export async function forgot()
-{
-
-}
-
-export async function updateUser(req: Request, res: Response)
-{
-  console.log('ok!');
-  return res.status(200).json({'message' : 'user atualizado!'});
-}
-
 export async function forgotPasswordController(req: Request, res: Response)
 {
   const { id, email } = req.user;
