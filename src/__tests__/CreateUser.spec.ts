@@ -1,7 +1,7 @@
 import { request, response } from 'express';
-import registerService from '../services/user/register'
+import registerService from '../services/register'
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability'
-import { resetPasswordController } from '../controllers/user.controller.';
+import { resetPasswordController } from '../controllers/user.controller';
 import { prismaMock } from '../database/singleton';
 import {v4 as uuidv4} from 'uuid';
 import hash from 'bcrypt';
@@ -15,6 +15,12 @@ describe('Criação de um Usuario', () => {
             password : '12345678',
         }
 
+    const adminLogin = {
+        email : "teste@gmail.com", 
+        name : 'TesteMan', 
+        password : '12345678',
+    }
+
     it("Deve ser Possivel criar um Usuario", async () => { 
         
         const user = {
@@ -27,13 +33,33 @@ describe('Criação de um Usuario', () => {
             createdAt : new Date(),
             updatedAt : new Date(),
         }
+
+        const admin = {
+            id : uuidv4(),
+            name : userLogin.name,
+            email : userLogin.email,
+            password : hash.hashSync(userLogin.password, 12),
+            avatar : null,
+            authorityLevel : 1,
+            createdAt : new Date(),
+            updatedAt : new Date(),
+        }
         
         prismaMock.user.create.mockResolvedValue(user);
-        
-        expect(registerService(userLogin))
+        prismaMock.admin.create.mockResolvedValue(admin);
+
+        request.baseUrl = '/user';
+        expect(registerService(userLogin, request))
         .resolves
         .toStrictEqual({
             ...user, id: undefined, password: undefined, updatedAt: undefined
+        });
+
+        request.baseUrl = '/admin';
+        expect(registerService(adminLogin, request))
+        .resolves
+        .toStrictEqual({
+            ...admin, id: undefined, password: undefined, updatedAt: undefined
         });
 
     });
