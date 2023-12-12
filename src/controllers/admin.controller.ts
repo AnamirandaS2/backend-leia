@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 
 import approveReviewService from '../services/admin/approveReview.service';
 import generateToken from '../services/admin/login';
-import registerService from '../services/admin/register';
+import registerService from '../services/register';
 
 export async function registerController(req: Request, res: Response)
 {
   const { name, email, password } = req.body as { name: string; email: string; password: string };
     
-  const userAdmin = await registerService({ name, email, password });
+  const userAdmin = await registerService({ name, email, password }, req);
 
   return res.status(201).json(userAdmin);
 }

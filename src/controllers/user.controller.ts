@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import forgotPasswordService from '../services/user/forgotPassword.service';
 import generateToken from '../services/user/generateToken.service';
-import registerService from '../services/user/register';
+import registerService from '../services/register';
 import resetPasswordService from '../services/user/resetPassword.service';
 import updateService from '../services/user/update.service';
 
@@ -10,7 +10,7 @@ export async function registerController(req: Request, res: Response)
 {
   const { name, email, password } = req.body as { name: string; email: string; password: string };
     
-  const user = await registerService({ name, email, password });
+  const user = await registerService({ name, email, password }, req);
 
   return res.status(201).json(user);
 }

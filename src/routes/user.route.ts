@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController } from '../controllers/user.controller.';
+import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController } from '../controllers/user.controller';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
 import checkLogin from '../middlewares/user/checkLogin';
@@ -12,7 +12,7 @@ import verifyShape from '../utils/verifyShape';
 const useRouter = Router();
 
 // register
-useRouter.post('', verifyShape(registerSchema), checkEmailAvailability, registerController);
+useRouter.post('/register', verifyShape(registerSchema), checkEmailAvailability, registerController);
 
 // login
 useRouter.post('/login', verifyShape(loginSchema), checkLogin, loginController);
