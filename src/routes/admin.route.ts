@@ -11,7 +11,7 @@ import verifyShape from '../utils/verifyShape';
 
 const useRouter = Router();
 
-useRouter.post('', verifyShape(registerSchema), checkLoginAdmin, checkAdvancedAdminPermission, checkEmailAvailability, registerController);
+useRouter.post('/register', verifyShape(registerSchema), checkTokenAdmin, checkAdvancedAdminPermission,checkEmailAvailability, registerController);
 useRouter.post('/login', verifyShape(loginSchema), checkLoginAdmin, loginController);
 useRouter.get('', checkTokenAdmin);
 useRouter.post('/approve/:id', checkTokenAdmin, checkReviewExists);

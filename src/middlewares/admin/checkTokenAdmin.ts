@@ -14,10 +14,11 @@ export default async function checkToken(req: Request, res: Response, next: Next
     const { id } = verify(token, process.env.JWT_SECRET) as {id: string};
     const userAdmin = await prisma.admin.findFirst({ where: { id } });
 
-    req.user = {
+    req.admin = {
       id: id,
       email: userAdmin.email,
-      name: userAdmin.name
+      name: userAdmin.name,
+      authorityLevel: userAdmin.authorityLevel
     };
     
     return next();
