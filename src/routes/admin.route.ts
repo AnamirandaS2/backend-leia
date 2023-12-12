@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { loginController, registerController } from '../controllers/admin.controller';
 import checkAdvancedAdminPermission from '../middlewares/admin/checkAdvancedAdminPermission';
-import checkEmailAvailability from '../middlewares/admin/checkEmailAvailability';
+import checkEmailAvailability from '../middlewares/checkEmailAvailability';
 import checkLoginAdmin from '../middlewares/admin/checkLoginAdmin';
 import checkTokenAdmin from '../middlewares/admin/checkTokenAdmin';
 import checkReviewExists from '../middlewares/review/checkReviewExists';

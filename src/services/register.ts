@@ -2,6 +2,7 @@ import hash from 'bcrypt';
 import { Request } from 'express';
 import prisma from '../database/db';
 import { SimpleUser } from '../interfaces/user.interface';
+import { AppError } from '../error';
 
 export default async function registerService({ email, name, password}: SimpleUser, req : Request){
   
@@ -32,6 +33,12 @@ export default async function registerService({ email, name, password}: SimpleUs
     );
     
     return { ...admin, id: undefined, password: undefined, updatedAt: undefined };
+  }
+  else
+  {
+    const error = new AppError('Erro Interno no Servidor.', 500);
+    console.log('Erro Aqui: ', error);
+    throw error;
   }
   
 }

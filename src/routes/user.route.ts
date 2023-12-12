@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController } from '../controllers/user.controller';
-import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
+import checkEmailAvailability from '../middlewares/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
 import checkLogin from '../middlewares/user/checkLogin';
 import checkParamsToken from '../middlewares/user/checkParamsToken';
