@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
 import approveReviewService from '../services/admin/approveReview.service';
-import generateToken from '../services/admin/login';
-import registerService from '../services/register';
+import generateToken from '../services/user/generateToken.service';
+import registerService from '../services/user/register.service';
 
 export async function registerController(req: Request, res: Response)
 {

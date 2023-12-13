@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController } from '../controllers/user.controller';
 import checkEmailAvailability from '../middlewares/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
-import checkLogin from '../middlewares/user/checkLogin';
+import checkLogin from '../middlewares/checkLogin';
 import checkParamsToken from '../middlewares/user/checkParamsToken';
 import checkToken from '../middlewares/user/checkToken';
 import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema, updateSchema } from '../schemas/user.schema';

@@ -27,7 +27,6 @@ export default async function checkEmailAvailability(req: Request, res: Response
 
     if(conflictMail) {
         const error = new AppError('Este e-mail já está cadastrado.', 409);
-        console.log('error is there: ', error);
         throw error;
     }  
 

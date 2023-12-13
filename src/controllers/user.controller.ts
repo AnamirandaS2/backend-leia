@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import forgotPasswordService from '../services/user/forgotPassword.service';
 import generateToken from '../services/user/generateToken.service';
-import registerService from '../services/register';
+import registerService from '../services/user/register.service';
 import resetPasswordService from '../services/user/resetPassword.service';
 import updateService from '../services/user/update.service';
 

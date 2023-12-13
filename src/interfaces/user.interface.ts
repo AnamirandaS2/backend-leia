@@ -14,7 +14,7 @@ interface Admin {
     name: string;
     email: string;
     password: string;
-    avatar: string;
+    avatar: string | null;
     authorityLevel: number;
     createdAt: Date;
     updatedAt: Date;
@@ -25,7 +25,7 @@ interface User {
     name: string;
     email: string;
     password: string;
-    avatar: string;
+    avatar: string | null;
     approved: boolean;
     createdAt: Date;
     updatedAt: Date;

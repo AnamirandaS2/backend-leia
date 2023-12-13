@@ -1,8 +1,8 @@
 import hash from 'bcrypt';
 import { Request } from 'express';
-import prisma from '../database/db';
-import { SimpleUser } from '../interfaces/user.interface';
-import { AppError } from '../error';
+import prisma from '../../database/db';
+import { SimpleUser } from '../../interfaces/user.interface';
+import { AppError } from '../../error';
 
 export default async function registerService({ email, name, password}: SimpleUser, req : Request){
   

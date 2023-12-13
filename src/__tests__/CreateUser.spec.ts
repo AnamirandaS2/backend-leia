@@ -1,6 +1,6 @@
 import { request, response } from 'express';
-import registerService from '../services/register'
-import checkEmailAvailability from '../middlewares/user/checkEmailAvailability'
+import registerService from '../services/user/register.service'
+import checkEmailAvailability from '../middlewares/checkEmailAvailability'
 import { resetPasswordController } from '../controllers/user.controller';
 import { prismaMock } from '../database/singleton';
 import {v4 as uuidv4} from 'uuid';
