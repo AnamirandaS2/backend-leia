@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { upsertPage } from '../controllers/activity.controller';
-import checkToken from '../middlewares/admin/checkTokenAdmin';
+import checkToken from '../middlewares/user/checkToken';
 import checkBook from '../middlewares/book/checkBook';
 import { activitySchema } from '../schemas/activity.schema';
 import verifyShape from '../utils/verifyShape';

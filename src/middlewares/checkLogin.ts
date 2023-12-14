@@ -34,7 +34,7 @@ export default async function checkLogin(req: Request, res: Response, next: Next
     const isValidPassword = await compare(password, admin.password);
     if(!isValidPassword) throw new AppError('Senha Inválida', 401);
 
-    req.admin = {
+    req.user = {
       id: admin.id,
       name: admin.name,
       email: admin.email

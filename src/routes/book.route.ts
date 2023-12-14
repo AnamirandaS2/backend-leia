@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import { addBook, deleteBook, queryBooks, updateBook, getBook } from '../controllers/book.controller';
-import checkTokenAdmin from '../middlewares/admin/checkTokenAdmin';
+import checkToken from '../middlewares/user/checkToken';
 import checkBook from '../middlewares/book/checkBook';
 import storage from '../middlewares/multerConfig';
 import { updateBookSchema } from '../schemas/ book.schema';
@@ -16,9 +16,9 @@ router.get('/books?:author?:from?:to?:genre?:minPages?:maxPages?:enabled', query
 router.get('/:id', checkBook, getBook);
 
 // enctype="multipart/form-data" no formulario do front
-router.post('', checkTokenAdmin, upload.fields([{name:'book', maxCount: 1}, {name:'cover', maxCount:1}]), addBook);
+router.post('', checkToken, upload.fields([{name:'book', maxCount: 1}, {name:'cover', maxCount:1}]), addBook);
 
-router.put('/:id', verifyShape(updateBookSchema), checkTokenAdmin, checkBook, updateBook);
-router.delete('/:id', checkTokenAdmin, checkBook, deleteBook);
+router.put('/:id', verifyShape(updateBookSchema), checkToken, checkBook, updateBook);
+router.delete('/:id', checkToken, checkBook, deleteBook);
 
 export default router;

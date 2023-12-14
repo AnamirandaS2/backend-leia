@@ -15,7 +15,7 @@ export async function registerController(req: Request, res: Response)
 
 export function loginController(req : Request, res : Response)
 {
-  const { id } = req.admin;
+  const { id } = req.user;
   const token = generateToken(id);
   return res.status(200).json({ token });
 }
