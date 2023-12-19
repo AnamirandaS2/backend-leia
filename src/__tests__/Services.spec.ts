@@ -67,30 +67,14 @@ describe('Testando os Services em user', () => {
     await expect(generateToken(id)).toBe(token);
   });
 
-  it('Reset Password Service: Deve ser Possivel mudar a senha', async () => {
+    it("Reset Password Service: Deve ser Possivel mudar a senha", async () => {
 
-    const {id} = user;
-    const newPassword = '87654321';
+        const id = user.id;
+        const newPassword = "87654321";
 
-    resetPasswordService(id, newPassword);
-    expect(prismaMock.user.update).toHaveBeenCalledTimes(1);
+        resetPasswordService(id, newPassword)
+        expect(prismaMock.user.update).toHaveBeenCalledTimes(1);
 
-    expect(prismaMock.user.update).not.toThrow();
-  });
-
-  // { title, description, author, genre, pages, publishedAt, file_book, cover_file }
-  test('should add book idk', ()=> {
-    expect(AddBookService).toBeDefined();
-    const spy = jest.fn().mockImplementation(AddBookService);
-    spy({title: '1', description: '2', author: '3', genre: '4', pages: 5, publishedAt: new Date(), file_book: {buffer: Buffer.from(''), mimetype: 'application/pdf'}, cover_file: {buffer: Buffer.from(''), mimetype: 'image/png'}});
-  });
-});
-
-/*
-*  const metadataCover = await supabase.storage.from('books').upload(parseFilename('_cover', title, author), cover_file.buffer, 
-    {   cacheControl: '3600',
-      upsert: false, 
-      contentType: cover_file.mimetype
-    });
-
-*/
+        expect(prismaMock.user.update).not.toThrow();
+    })
+})
