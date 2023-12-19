@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '../error';
-import prisma from '../database/db';
-import { DataUser } from '../interfaces/user.interface';
+import { AppError } from '../../error';
+import prisma from '../../database/db';
+import { DataUser } from '../../interfaces/user.interface';
 
 export default async function checkEmailAvailability(req: Request, res: Response, next: NextFunction): Promise<void> {
     

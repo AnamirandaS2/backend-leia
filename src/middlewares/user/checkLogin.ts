@@ -1,7 +1,7 @@
 import { compare } from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
-import prisma from '../database/db';
-import { AppError } from '../error';
+import prisma from '../../database/db';
+import { AppError } from '../../error';
 
 
 export default async function checkLogin(req: Request, res: Response, next: NextFunction): Promise<void> {

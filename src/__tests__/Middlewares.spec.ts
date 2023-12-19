@@ -1,17 +1,37 @@
-import { prismaMock } from '../database/singleton';
-import checkLogin from '../middlewares/checkLogin';
-import { request, response } from 'express';
 import { describe, it } from '@jest/globals'
-import { userLogin, adminLogin, user, admin } from './DataUser';
-import { sign } from 'jsonwebtoken';
-import generateToken from '../services/user/generateToken.service';
-import 'dotenv/config';
+import { prismaMock } from '../database/singleton';
+import { admin, adminLogin, user, userLogin } from './DataUser';
+import {  request, response } from 'express';
+
+import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
+import checkLogin from '../middlewares/user/checkLogin';
 
 
 
-describe("Login de um usuario", () => {
+describe("Testando os Middlewares em user", () => {
 
-    it("É impossivel logar com Email não Registrado", async () => {
+
+    it("checkEmailAvailability Middleware: É impossivel criar um Usuario com Email ja existente", async () => {
+
+        prismaMock.user.create({data : user});
+        prismaMock.user.findFirst.mockResolvedValue(user)
+        prismaMock.admin.create({data : admin});
+        prismaMock.admin.findFirst.mockResolvedValue(admin)
+        
+        const next = jest.fn();
+        
+        request.body = {"email" : userLogin.email}
+        request.baseUrl = '/user';
+        await expect(checkEmailAvailability(request, response, next ))
+        .rejects.toThrow('Este e-mail já está cadastrado.');
+
+        request.body = adminLogin.email;
+        request.baseUrl = '/admin';
+        await expect(checkEmailAvailability(request, response, next ))
+        .rejects.toThrow('Este e-mail já está cadastrado.');
+    })
+
+    it("checkLogin Middleware: É impossivel logar com Email não Registrado", async () => {
         
         prismaMock.user.findFirst.mockResolvedValue(null);
         prismaMock.admin.findFirst.mockResolvedValue(null);
@@ -36,7 +56,7 @@ describe("Login de um usuario", () => {
 
     })
 
-    it("É impossivel logar com Senha Errada", async () => {
+    it("checkLogin Middleware: É impossivel logar com Senha Errada", async () => {
         
         prismaMock.user.findFirst.mockResolvedValue(user);
         prismaMock.admin.findFirst.mockResolvedValue(admin);
@@ -62,16 +82,4 @@ describe("Login de um usuario", () => {
         await expect(checkLogin(request, response, next)).rejects.toThrow('Senha Inválida');
 
     })
-
-    it("Deve ser Possivel gerar um Token", async () => {
-
-        const id = user.id;
-
-        const token = sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
-
-        await expect(generateToken(id)).toBe(token);
-
-    })
-
-    it
 })
