@@ -25,7 +25,6 @@ export default async function AddBookService(
       contentType: file_book.mimetype,
     });
 
-  console.error(metadataBook);
   if (metadataBook.error){
     throw new AppError('Erro interno do servidor', 500);
   }

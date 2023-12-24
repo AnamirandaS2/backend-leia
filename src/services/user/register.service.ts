@@ -1,8 +1,9 @@
 import hash from 'bcrypt';
 import { Request } from 'express';
+
 import prisma from '../../database/db';
-import { SimpleUser } from '../../interfaces/user.interface';
 import { AppError } from '../../error';
+import { SimpleUser } from '../../interfaces/user.interface';
 
 export default async function registerService({ email, name, password}: SimpleUser, req : Request){
   
@@ -12,10 +13,10 @@ export default async function registerService({ email, name, password}: SimpleUs
   {
     const user = await prisma.user.create(
       {
-      data: {
-        email,
-        password: hash.hashSync(password, 12),
-        name}
+        data: {
+          email,
+          password: hash.hashSync(password, 12),
+          name}
       }
     );
 
@@ -25,10 +26,10 @@ export default async function registerService({ email, name, password}: SimpleUs
   {
     const admin = await prisma.admin.create(
       {
-      data: {
-        email,
-        password: hash.hashSync(password, 12),
-        name}
+        data: {
+          email,
+          password: hash.hashSync(password, 12),
+          name}
       }
     );
     
