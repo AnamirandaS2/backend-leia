@@ -1,13 +1,13 @@
 import { describe, it } from '@jest/globals';
 import {  request, response } from 'express';
 
-import { prismaMock } from '../database/singleton';
+import { prismaMock } from './config/singleton';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkLogin from '../middlewares/user/checkLogin';
 
 import { admin, adminLogin, user, userLogin } from './DataUser';
 
-describe('Testando os Middlewares em user', () => {
+describe('Testando os Middlewares user', () => {
 
   it('checkEmailAvailability Middleware: É impossivel criar um Usuario com Email ja existente', async () => {
 
