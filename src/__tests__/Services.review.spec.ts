@@ -1,11 +1,9 @@
 import { prismaMock } from "./config/singleton"
 import { jest } from "@jest/globals";
 import { Bucket }  from '@supabase/storage-js/src/lib/types'
-import * as fs from 'fs/promises';
-
-
 import createReviewService from "../services/review/createReview.service";
 import { book, user, review } from "./DataUser";
+import findReviewService from "../services/review/findReview.service";
 
 const data : Bucket = {
     id : 'teste',
@@ -25,8 +23,12 @@ jest.mock('../database/bucket', () => ({
             data: {
               path: 'ok',
               error : null
-            }
-          }),
+            }}),
+          
+          download: jest.fn().mockReturnValue({
+            data : new Blob(['testReview'], { type: 'text' }),
+            error : null
+          })
         }),
         getBucket: jest.fn().mockReturnValue(Promise.resolve({data: data, error : null})),
         createBucket: jest.fn()
@@ -50,5 +52,10 @@ describe("Testando os Services review", () => {
         const received = await createReviewService({bookId, content, title, userId, name})
         
         expect(received).toStrictEqual({...review, userId: undefined})
+    })
+
+    it("findReview Service: É possivel pesquisar uma review", async () => {
+
+      expect(findReviewService('roberto', review.title)).resolves.toBe("testReview")
     })
 })
