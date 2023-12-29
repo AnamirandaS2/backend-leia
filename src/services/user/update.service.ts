@@ -22,6 +22,5 @@ export default async function updateService({ id, name, password, avatar }) {
 
   });
 
-  console.error(user);
   return user;
 }

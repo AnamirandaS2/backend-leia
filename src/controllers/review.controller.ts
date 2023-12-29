@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import createReviewService from '../services/review/createReview.service';
 import findReviewService from '../services/review/findReview.service';
-import getAdminEmailsService from '../services/review/getAdminEmails.service';
+import getAdminEmailsService from '../services/admin/getAdminEmails.service';
 import queryReviewsService from '../services/review/queryReviews.service';
 import sendReviewService from '../services/review/sendReview.service';
 import updateReviewService from '../services/review/updateReview.service';
