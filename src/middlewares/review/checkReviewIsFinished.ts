@@ -6,10 +6,7 @@ export default function checkReviewIsFinished(req: Request, res: Response, next:
   const { review } = req;
   const { finished } = review;
     
-  if (finished) {
-    throw new AppError('Review is already finished', 403);
-  }
+  if (finished) throw new AppError('Review is already finished', 404);
     
-  console.error(review);
   return next();
 }

@@ -2,6 +2,7 @@ import { describe, it } from '@jest/globals';
 import { request, response } from 'express';
 
 import checkReviewExists from '../middlewares/review/checkReviewExists';
+import checkReviewIsFinished from '../middlewares/review/checkReviewIsFinished';
 
 import { review, user, } from './DataUser';
 import { prismaMock } from './config/singleton';
@@ -22,7 +23,16 @@ describe('Testando os Middlewares Review', () => {
 
     await checkReviewExists(request, response, next);
     expect(next).toHaveBeenCalled();
-    
+
+  });
+
+  it('checkReviewIsFinished Middleware: Deve ser possivel verificar se uma review esta terminada', async () => {
+
+    request.review = {...review, finished: false};
+    const next = jest.fn();
+
+    await checkReviewIsFinished(request, response, next);
+    expect(next).toHaveBeenCalled();
   });
 
 });
