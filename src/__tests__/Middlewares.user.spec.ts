@@ -6,6 +6,8 @@ import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkLogin from '../middlewares/user/checkLogin';
 
 import { admin, adminLogin, user, userLogin } from './DataUser';
+import checkEmailExistence from '../middlewares/user/checkEmailExistence';
+import { AppError } from '../error';
 
 describe('Testando os Middlewares user', () => {
 
@@ -79,5 +81,17 @@ describe('Testando os Middlewares user', () => {
     request.baseUrl = '/admin';
     await expect(checkLogin(request, response, next)).rejects.toThrow('Senha Inválida');
 
+  });
+
+  it('checkEmailExistence: Deve ser possivel verifiar se o email nao esta cadastrado', async () => {
+
+    prismaMock.user.findUnique.mockResolvedValue(null);
+
+    request.body = { email : userLogin.email };
+    const next = jest.fn();
+
+    expect(checkEmailExistence(request, response, next)).rejects.toThrow("Email não cadastrado!");
+
+    expect(next).not.toHaveBeenCalled();
   });
 });
