@@ -1,13 +1,13 @@
 import { describe, it } from '@jest/globals';
-import {  request, response } from 'express';
-import { prismaMock } from './config/singleton';
+import { request, response } from 'express';
 
-import { admin, adminLogin, user, userLogin } from './DataUser';
-
-import checkLogin from '../middlewares/user/checkLogin';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
+import checkLogin from '../middlewares/user/checkLogin';
 import checkNewPasswordEqualsOld from '../middlewares/user/checkNewPasswordEqualsOld';
+
+import { admin, adminLogin, user, userLogin } from './DataUser';
+import { prismaMock } from './config/singleton';
 
 describe('Testando os Middlewares user', () => {
 
@@ -90,7 +90,7 @@ describe('Testando os Middlewares user', () => {
     request.body = { email : userLogin.email };
     const next = jest.fn();
 
-    expect(checkEmailExistence(request, response, next)).rejects.toThrow("Email não cadastrado!");
+    expect(checkEmailExistence(request, response, next)).rejects.toThrow('Email não cadastrado!');
 
     expect(next).not.toHaveBeenCalled();
   });
@@ -100,9 +100,11 @@ describe('Testando os Middlewares user', () => {
     prismaMock.user.findUnique.mockResolvedValue(user);
 
     request.body = { newPassword: userLogin.password };
-    request.user = { id : user.id}
+    request.user = { id : user.id};
     const next = jest.fn();
 
     await expect(checkNewPasswordEqualsOld(request, response, next)).rejects.toThrow('A nova senha não pode ser igual à antiga');
   });
+  
+  // checkParamsTokem ausente
 });

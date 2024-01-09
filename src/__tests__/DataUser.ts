@@ -25,37 +25,37 @@ export const user = {
 };
 
 export const admin = {
-    id : uuidv4(),
-    name : adminLogin.name,
-    email : adminLogin.email,
-    password : hash.hashSync(adminLogin.password, 12),
-    avatar : null,
-    authorityLevel : 1,
-    createdAt : new Date(),
-    updatedAt : new Date(),
-}
+  id : uuidv4(),
+  name : adminLogin.name,
+  email : adminLogin.email,
+  password : hash.hashSync(adminLogin.password, 12),
+  avatar : null,
+  authorityLevel : 1,
+  createdAt : new Date(),
+  updatedAt : new Date(),
+};
 
 export const book = {
-    id : uuidv4(),
-    title : 'Sherlock Homes e os 4 signos',
-    createdAt : new Date(),
-    description : 'Sherlock Holmes é um detetive britânico enigmático e pedante do final do século XX.',
-    author : 'Arthur Conan Doyle',
-    genre: 'Romance',
-    pages: 207,
-    publishedAt: new Date(),
-    activities: {
-        page: 36,
-    },
-}
+  id : uuidv4(),
+  title : 'Sherlock Homes e os 4 signos',
+  createdAt : new Date(),
+  description : 'Sherlock Holmes é um detetive britânico enigmático e pedante do final do século XX.',
+  author : 'Arthur Conan Doyle',
+  genre: 'Romance',
+  pages: 207,
+  publishedAt: new Date(),
+  activities: {
+    page: 36,
+  },
+};
 
 export const review = {
-    id: uuidv4(),
-    userId : user.id,
-    bookId : book.id,
-    title : "Resenha n1",
-    approved : true,
-    finished : true,
-    createdAt : new Date(),
-    updatedAt : new Date(),
-}
+  id: uuidv4(),
+  userId : user.id,
+  bookId : book.id,
+  title : 'Resenha n1',
+  approved : true,
+  finished : true,
+  createdAt : new Date(),
+  updatedAt : new Date(),
+};
