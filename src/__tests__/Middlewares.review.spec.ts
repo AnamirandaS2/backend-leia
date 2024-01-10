@@ -3,6 +3,7 @@ import { request, response } from 'express';
 
 import checkReviewExists from '../middlewares/review/checkReviewExists';
 import checkReviewIsFinished from '../middlewares/review/checkReviewIsFinished';
+import checkReviewIsFromUser from '../middlewares/review/checkReviewIsFromUser';
 
 import { review, user, } from './DataUser';
 import { prismaMock } from './config/singleton';
@@ -33,6 +34,29 @@ describe('Testando os Middlewares Review', () => {
 
     await checkReviewIsFinished(request, response, next);
     expect(next).toHaveBeenCalled();
+  });
+
+  it('checkReviewIsFromUser Middleware: Deve ser possiveil verificar o autor de uma review', async () => {
+
+    const next = jest.fn().mockReturnValue('ok');
+    
+    request.query = { reviewId : undefined };
+    request.params = { reviewId : '' };
+    await expect(checkReviewIsFromUser(request, response, next)).rejects.toThrow('Review id is required');
+    
+    request.query = { reviewId : review.id };
+    prismaMock.review.findUnique.mockResolvedValue(review);
+    request.user = { id : '345542343445' };
+    await expect(checkReviewIsFromUser(request, response, next)).rejects.toThrow('You are not allowed to do this');
+    
+    request.user = { id : user.id };
+    prismaMock.review.findUnique.mockResolvedValue(null);
+    await expect(checkReviewIsFromUser(request, response, next)).rejects.toThrow('Review not found');
+    
+    prismaMock.review.findUnique.mockResolvedValue(review);
+    await checkReviewIsFromUser(request, response, next);
+    expect(next).toHaveBeenCalled();
+
   });
 
 });
