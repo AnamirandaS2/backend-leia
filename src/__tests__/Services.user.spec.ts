@@ -1,11 +1,12 @@
 import { request } from 'express';
 import { sign } from 'jsonwebtoken';
-import { prismaMock } from './config/singleton';
+
 import generateToken from '../services/user/generateToken.service';
 import registerService from '../services/user/register.service';
-import { user, admin, userLogin, adminLogin } from './DataUser';
-import 'dotenv/config';
 
+import { user, admin, userLogin, adminLogin } from './DataUser';
+import { prismaMock } from './config/singleton';
+import 'dotenv/config';
 
 describe('Testando os Services user', () => {
 
@@ -38,5 +39,5 @@ describe('Testando os Services user', () => {
     return expect(generateToken(id)).toBe(token);
   });
 
-})
+});
 // resetPassaword.service e update.service estão ausentes

@@ -3,7 +3,7 @@ import { request, response } from 'express';
 
 import checkBook from '../middlewares/book/checkBook';
 
-import { book, review, user, } from './DataUser';
+import { book } from './DataUser';
 import { prismaMock } from './config/singleton';
 
 describe('Testando os Middlewares Book', () => {
