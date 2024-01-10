@@ -38,15 +38,17 @@ export const admin = {
 export const book = {
   id : uuidv4(),
   title : 'Sherlock Homes e os 4 signos',
-  createdAt : new Date(),
   description : 'Sherlock Holmes é um detetive britânico enigmático e pedante do final do século XX.',
   author : 'Arthur Conan Doyle',
+  source: 'supabase.com/base',
+  cover : 'supabase.com/base',
   genre: 'Romance',
   pages: 207,
+  enabled : true,
   publishedAt: new Date(),
-  activities: {
-    page: 36,
-  },
+  createdAt : new Date(),
+  updatedAt : new Date(),
+  sentAt : null,
 };
 
 export const review = {
