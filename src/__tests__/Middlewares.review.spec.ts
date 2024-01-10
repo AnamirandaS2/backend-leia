@@ -1,11 +1,12 @@
 import { describe, it } from '@jest/globals';
 import { request, response } from 'express';
 
+import checkCreationAvailable from '../middlewares/review/checkCreationAvailable';
 import checkReviewExists from '../middlewares/review/checkReviewExists';
 import checkReviewIsFinished from '../middlewares/review/checkReviewIsFinished';
 import checkReviewIsFromUser from '../middlewares/review/checkReviewIsFromUser';
 
-import { review, user, } from './DataUser';
+import { book, review, user, } from './DataUser';
 import { prismaMock } from './config/singleton';
 
 describe('Testando os Middlewares Review', () => {
@@ -56,6 +57,30 @@ describe('Testando os Middlewares Review', () => {
     prismaMock.review.findUnique.mockResolvedValue(review);
     await checkReviewIsFromUser(request, response, next);
     expect(next).toHaveBeenCalled();
+
+  });
+
+  it('checkCreationAvailable Middleware: Deve ser possivel verificar se pode criar uma review', async () => {
+
+    request.body = { bookId : book.id };
+    request.user = { id : user.id };
+
+    const next = jest.fn().mockReturnValue('ok');
+    
+    prismaMock.review.findMany.mockResolvedValue( [{...review, finished: false}] );
+    await expect(checkCreationAvailable(request, response, next)).rejects.toThrow('A review of this book is already in progress');
+
+    prismaMock.review.findMany.mockResolvedValue( [review] );
+    await expect(checkCreationAvailable(request, response, next)).rejects.toThrow('A review of this book was already made and approved');
+
+    prismaMock.book.findUnique.mockResolvedValue(null);
+    prismaMock.review.findMany.mockResolvedValue( [{...review, approved: false}] );
+    await expect(checkCreationAvailable(request, response, next)).rejects.toThrow('Book not found');
+
+    const retorno = jest.fn().mockResolvedValue(book);
+    
+    prismaMock.book.findUnique.mockImplementationOnce(retorno);
+    await expect(checkCreationAvailable(request, response, next)).resolves.toBe('ok');
 
   });
 
