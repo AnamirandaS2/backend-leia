@@ -2,9 +2,9 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import { addBook, deleteBook, queryBooks, updateBook, getBook } from '../controllers/book.controller';
-import checkToken from '../middlewares/user/checkToken';
 import checkBook from '../middlewares/book/checkBook';
 import storage from '../middlewares/multerConfig';
+import checkToken from '../middlewares/user/checkToken';
 import { updateBookSchema } from '../schemas/ book.schema';
 import verifyShape from '../utils/verifyShape';
 
