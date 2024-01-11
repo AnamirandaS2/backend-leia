@@ -5,9 +5,11 @@ import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
 import checkLogin from '../middlewares/user/checkLogin';
 import checkNewPasswordEqualsOld from '../middlewares/user/checkNewPasswordEqualsOld';
+import checkToken from '../middlewares/user/checkToken';
 
 import { admin, adminLogin, user, userLogin } from './DataUser';
 import { prismaMock } from './config/singleton';
+import 'dotenv/config';
 
 describe('Testando os Middlewares user', () => {
 
@@ -104,6 +106,24 @@ describe('Testando os Middlewares user', () => {
     const next = jest.fn();
 
     await expect(checkNewPasswordEqualsOld(request, response, next)).rejects.toThrow('A nova senha não pode ser igual à antiga');
+  });
+
+  it('checkToken Middleware: Deve ser possivel verificar se o token é valido', async () => {
+
+    const next = jest.fn().mockReturnValue('ok');
+
+    await expect(checkToken(request, response, next)).rejects.toThrow('Token não informado');
+    
+    request.headers = { authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhZDVhY2VhLTFhNTUtNDE3Ni1iZWQ3LWNlNDY4NWI4ODc1MCIsImlhdCI6MTcwNDk5NzM5MSwiZXhwIjoxNzA1NjAyMTkxfQ.ldl2Xwa5q55U-OYzjfcybTVlHMoFbH66VUADbOB1RaQ'};
+    
+    prismaMock.user.findFirst.mockResolvedValueOnce(user);
+    await checkToken(request, response, next);
+    expect(next).toHaveBeenCalledTimes(1);
+
+    prismaMock.admin.findFirst.mockResolvedValueOnce(admin);
+    await checkToken(request, response, next);
+    expect(next).toHaveBeenCalledTimes(2);
+
   });
   
   // checkParamsTokem ausente
