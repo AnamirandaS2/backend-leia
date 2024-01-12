@@ -1,11 +1,12 @@
+/* eslint-disable import/order */
 import { describe, it } from '@jest/globals';
 import { request, response } from 'express';
 
-import checkBook from '../middlewares/book/checkBook';
-import insertIdBook from '../middlewares/book/insertIdBook';
+import checkBook from '../../middlewares/book/checkBook';
+import insertIdBook from '../../middlewares/book/insertIdBook';
 
-import { book } from './DataUser';
-import { prismaMock } from './config/singleton';
+import { book } from '../DataUser';
+import { prismaMock } from '../config/singleton';
 
 describe('Testando os Middlewares Book', () => {
 

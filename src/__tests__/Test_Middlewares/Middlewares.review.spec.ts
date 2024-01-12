@@ -1,13 +1,14 @@
+/* eslint-disable import/order */
 import { describe, it } from '@jest/globals';
 import { request, response } from 'express';
 
-import checkCreationAvailable from '../middlewares/review/checkCreationAvailable';
-import checkReviewExists from '../middlewares/review/checkReviewExists';
-import checkReviewIsFinished from '../middlewares/review/checkReviewIsFinished';
-import checkReviewIsFromUser from '../middlewares/review/checkReviewIsFromUser';
+import checkCreationAvailable from '../../middlewares/review/checkCreationAvailable';
+import checkReviewExists from '../../middlewares/review/checkReviewExists';
+import checkReviewIsFinished from '../../middlewares/review/checkReviewIsFinished';
+import checkReviewIsFromUser from '../../middlewares/review/checkReviewIsFromUser';
 
-import { book, review, user, } from './DataUser';
-import { prismaMock } from './config/singleton';
+import { book, review, user, } from '../DataUser';
+import { prismaMock } from '../config/singleton';
 
 describe('Testando os Middlewares Review', () => {
 

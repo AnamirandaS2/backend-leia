@@ -1,11 +1,12 @@
+/* eslint-disable import/order */
 import { request } from 'express';
 import { sign } from 'jsonwebtoken';
 
-import generateToken from '../services/user/generateToken.service';
-import registerService from '../services/user/register.service';
+import generateToken from '../../services/user/generateToken.service';
+import registerService from '../../services/user/register.service';
 
-import { user, admin, userLogin, adminLogin } from './DataUser';
-import { prismaMock } from './config/singleton';
+import { user, admin, userLogin, adminLogin } from '../DataUser';
+import { prismaMock } from '../config/singleton';
 import 'dotenv/config';
 
 describe('Testando os Services user', () => {

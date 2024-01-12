@@ -1,9 +1,10 @@
+/* eslint-disable import/order */
 import { describe, it } from '@jest/globals';
 import { request, response } from 'express';
 
-import checkAdvancedAdminPermission from '../middlewares/admin/checkAdvancedAdminPermission';
+import checkAdvancedAdminPermission from '../../middlewares/admin/checkAdvancedAdminPermission';
 
-import { admin, } from './DataUser';
+import { admin, } from '../DataUser';
 
 describe('Testando os Middlewares Book', () => {
 

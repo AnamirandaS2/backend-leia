@@ -1,14 +1,15 @@
+/* eslint-disable import/order */
 import { describe, it } from '@jest/globals';
 import { request, response } from 'express';
 
-import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
-import checkEmailExistence from '../middlewares/user/checkEmailExistence';
-import checkLogin from '../middlewares/user/checkLogin';
-import checkNewPasswordEqualsOld from '../middlewares/user/checkNewPasswordEqualsOld';
-import checkToken from '../middlewares/user/checkToken';
+import checkEmailAvailability from '../../middlewares/user/checkEmailAvailability';
+import checkEmailExistence from '../../middlewares/user/checkEmailExistence';
+import checkLogin from '../../middlewares/user/checkLogin';
+import checkNewPasswordEqualsOld from '../../middlewares/user/checkNewPasswordEqualsOld';
+import checkToken from '../../middlewares/user/checkToken';
 
-import { admin, adminLogin, user, userLogin } from './DataUser';
-import { prismaMock } from './config/singleton';
+import { admin, adminLogin, user, userLogin } from '../DataUser';
+import { prismaMock } from '../config/singleton';
 import 'dotenv/config';
 
 describe('Testando os Middlewares user', () => {

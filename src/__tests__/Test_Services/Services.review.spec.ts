@@ -1,11 +1,12 @@
+/* eslint-disable import/order */
 import { jest } from '@jest/globals';
 import { Bucket }  from '@supabase/storage-js/src/lib/types';
 
-import createReviewService from '../services/review/createReview.service';
-import findReviewService from '../services/review/findReview.service';
+import createReviewService from '../../services/review/createReview.service';
+import findReviewService from '../../services/review/findReview.service';
 
-import { book, user, review } from './DataUser';
-import { prismaMock } from './config/singleton';
+import { book, user, review } from '../DataUser';
+import { prismaMock } from '../config/singleton';
 
 const data : Bucket = {
   id : 'teste',
@@ -16,7 +17,7 @@ const data : Bucket = {
   public : true,
 };
 
-jest.mock('../database/bucket', () => ({
+jest.mock('../../database/bucket', () => ({
   __esModule: true,
   default: {
     storage: {
