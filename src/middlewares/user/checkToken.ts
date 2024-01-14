@@ -9,7 +9,7 @@ export default async function checkToken(req: Request, res: Response, next: Next
   const { authorization } = req.headers;
   if (!authorization) throw new AppError('Token não informado', 401);
     
-  const [ , token ] = authorization.split(' ');
+  const [ token ] = authorization.split(' ');
   if(!token) throw new AppError('Token não informado', 401);
 
   let userId = '';
