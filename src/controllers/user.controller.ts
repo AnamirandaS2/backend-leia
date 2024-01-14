@@ -17,14 +17,14 @@ export async function registerController(req: Request, res: Response)
 
 export function loginController(req : Request, res : Response)
 {
-  const { id } = req.user;
+  const { id } = req.user as { id: string };
   const token = generateToken(id);
   return res.status(200).json({ token });
 }
 
 export async function forgotPasswordController(req: Request, res: Response)
 {
-  const { id, email } = req.user;
+  const { id, email } = req.user as { id: string; email: string };
 
   const token = await generateToken(id);
   await forgotPasswordService(token, email);
@@ -34,7 +34,7 @@ export async function forgotPasswordController(req: Request, res: Response)
 export async function resetPasswordController(req: Request, res: Response)
 {
   const { newPassword } = req.body;
-  const { id } = req.user;
+  const { id } = req.user as { id: string };
 
   await resetPasswordService(id, newPassword);
 

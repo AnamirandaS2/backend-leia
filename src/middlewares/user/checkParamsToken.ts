@@ -10,7 +10,7 @@ export default async function checkParamsToken(req: Request, res: Response, next
   if(!token) throw new AppError('Token não informado', 401);
   
   try {
-    const { id } = verify(token, process.env.JWT_SECRET) as { id: string };
+    const { id } = verify(token, process.env.JWT_SECRET as string) as unknown as { id: string };
     req.user = { id };
   } catch(err) {
     throw new AppError('Token inválido', 404);

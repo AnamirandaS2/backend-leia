@@ -16,7 +16,8 @@ export default async function registerService({ email, name, password}: SimpleUs
         data: {
           email,
           password: hash.hashSync(password, 12),
-          name}
+          name
+        }
       }
     );
 
@@ -29,7 +30,9 @@ export default async function registerService({ email, name, password}: SimpleUs
         data: {
           email,
           password: hash.hashSync(password, 12),
-          name}
+          name,
+          authorityLevel: 2
+        }
       }
     );
     

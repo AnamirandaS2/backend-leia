@@ -7,7 +7,7 @@ export const updateBookSchema = yup.object().shape({
   author: yup.string(),
   genre: yup.string(),
   pages: yup.number(),
-  publishedAt: yup.string(),
+  publishedAt: yup.date(),
 }).test('at-least-one-property', 'you must provide at least one', value =>
   !!(value.author || value.title || value.description || value.genre || value.pages || value.publishedAt || value.cover)
 );

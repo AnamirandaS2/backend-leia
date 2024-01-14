@@ -2,6 +2,7 @@ export interface User {
   id?: string;
   name?: string;
   email?: string;
+  approved?: boolean;
 }
   
 export interface Admin {

@@ -6,7 +6,7 @@ import { AppError } from '../../error';
 export default async function checkNewPasswordEqualsOld(req: Request, res: Response, next: NextFunction) {
   const { newPassword } = req.body;
   const { id } = req.user;
-  const { password } = await prisma.user.findUnique({ where: { id }, select: { password: true }});
+  const { password } = await prisma.user.findUnique({ where: { id }, select: { password: true }}) as { password: string };
 
   const isSame = await compare(newPassword, password);
 

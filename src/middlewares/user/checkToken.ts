@@ -12,21 +12,20 @@ export default async function checkToken(req: Request, res: Response, next: Next
   const [ , token ] = authorization.split(' ');
   if(!token) throw new AppError('Token não informado', 401);
 
-  var id = '';
+  let userId = '';
   req.user = {};
   
   try {
-      id  = (verify(token, process.env.JWT_SECRET as string) as {id: string}).id;
+    userId  = (verify(token, process.env.JWT_SECRET as string) as {id: string}).id;
   } catch(err) {
     throw new AppError('Token inválido', 404);
   } 
 
   const DataUser  =  
-    await prisma.user.findFirst({ where: { id }, select: { email: true, name: true }}) || await prisma.admin.findFirst({ where: { id }, select: { email: true, name: true, authorityLevel: true }})
-  
+    await prisma.user.findFirst({ where: { id: userId }, select: { email: true, name: true }}) || await prisma.admin.findFirst({ where: { id: userId }, select: { email: true, name: true, authorityLevel: true }});
   
   req.user = {
-    id : id,
+    id : userId,
     ...DataUser,
   };
   

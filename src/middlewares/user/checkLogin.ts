@@ -1,8 +1,8 @@
 import { compare } from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
+
 import prisma from '../../database/db';
 import { AppError } from '../../error';
-
 
 export default async function checkLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
   
@@ -17,6 +17,9 @@ export default async function checkLogin(req: Request, res: Response, next: Next
     const isValidPassword = await compare(password, user.password);
     if(!isValidPassword) throw new AppError('Senha Inválida', 401);
 
+    const isApproved = user.approved;
+    if (!isApproved) throw new AppError('Usuário não aprovado', 401);
+    
     req.user = {
       id: user.id,
       name: user.name,

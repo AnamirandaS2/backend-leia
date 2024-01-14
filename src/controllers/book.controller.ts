@@ -8,7 +8,7 @@ import updateService from '../services/book/updateBook';
 
 export async function getBook(req : Request, res : Response)
 {
-  const { title, author } = req.book;
+  const { title, author } = req.book as { title: string; author: string };
 
   const book = await getBookService(title, author);
   
@@ -29,8 +29,8 @@ export async function addBook(req : Request, res : Response)
 {
   const { title, description, author, genre, pages, publishedAt } = req.body;
 
-  const [ file_book ] = req.files['book'];
-  const [ cover_file ] = req.files['cover'];
+  const [ file_book ] = req.files!['book'];
+  const [ cover_file ] = req.files!['cover'];
 
   const book = await addBookService({
     title, 
@@ -57,7 +57,7 @@ export async function updateBook(req: Request, res: Response)
 
 export async function deleteBook(req: Request, res: Response)
 {
-  const { id } = req.book;
+  const { id } = req.book as { id: string };
   await deleteService(id);
   return res.status(204).send();
 }

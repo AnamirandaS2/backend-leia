@@ -29,15 +29,6 @@ jest.mock('../database/bucket', () => ({
 }));
 describe('Testando os Services em user', () => {
 
-  jest.mock('../database/bucket', () => {
-    const originalModule = jest.requireActual('../database/bucket');
-    return {
-      __esModule: true,
-      ...originalModule,
-      default: jest.fn()
-    };
-  });
-
   it('Register Service: Deve ser Possivel criar um Usuario', async () => {
 
     prismaMock.user.create.mockResolvedValue(user);
