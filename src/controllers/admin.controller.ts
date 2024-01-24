@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import approveReviewService from '../services/admin/approveReview.service';
 import approveUserService from '../services/admin/approveUserService';
 import fetchNonApprovedUsersService from '../services/admin/fetchNonApprovedUsers.service';
+import fetchUser from '../services/admin/fetchUser.service';
+import fetchUsersService from '../services/admin/fetchUsers.service';
 import rejectUserService from '../services/admin/rejectUserService';
 import generateToken from '../services/user/generateToken.service';
 import registerService from '../services/user/register.service';
@@ -48,4 +50,17 @@ export async function rejectUser(req: Request, res: Response)
   const { id } = req.params;
   await rejectUserService(id);
   return res.status(200);
+}
+
+export async function fetchUsers(req: Request, res: Response)
+{
+  const data = await fetchUsersService();
+  return res.status(200).json(data);
+}
+
+export async function getUser(req: Request, res: Response)
+{
+  const { reviewId } = req.params;
+  const data = await fetchUser(reviewId);
+  return res.status(200).json(data);
 }

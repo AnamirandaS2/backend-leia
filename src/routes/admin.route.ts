@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { approveUser, fetchNonApprovedUsers, loginController, registerController, rejectUser } from '../controllers/admin.controller';
+import { approveUser, fetchNonApprovedUsers, fetchUsers, getUser, loginController, registerController, rejectUser } from '../controllers/admin.controller';
 import checkAdvancedAdminPermission from '../middlewares/admin/checkAdvancedAdminPermission';
 import checkReviewExists from '../middlewares/review/checkReviewExists';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
@@ -19,5 +19,7 @@ useRouter.get('/non-approved-users', checkToken, fetchNonApprovedUsers);
 useRouter.post('/approve-review/:id', checkToken, checkReviewExists);
 useRouter.post('/approve-user/:id', checkToken, checkParamsId, approveUser);
 useRouter.post('/reject-user/:id', checkToken, checkParamsId, rejectUser);
+useRouter.get('/users', checkToken, fetchUsers);
+useRouter.get('/user/:reviewId', checkToken, checkReviewExists, getUser);
 
 export default useRouter;

@@ -5,7 +5,7 @@ import { AppError } from '../../error';
 
 export default async function checkCreationAvailable(req: Request, res: Response, next: NextFunction) {
 
-  const { bookId } = req.body;
+  const { id: bookId } = req.body;
   const { id: userId } = req.user;
   const reviews = await prisma.review.findMany({ where: { bookId, userId  } });
 

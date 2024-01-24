@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 
+import getAdminEmailsService from '../services/admin/getAdminEmails.service';
 import createReviewService from '../services/review/createReview.service';
 import findReviewService from '../services/review/findReview.service';
-import getAdminEmailsService from '../services/admin/getAdminEmails.service';
 import queryReviewsService from '../services/review/queryReviews.service';
 import sendReviewService from '../services/review/sendReview.service';
 import updateReviewService from '../services/review/updateReview.service';
 
 export async function fetchReview(req: Request, res: Response) {
   const { title } = req.review as { title: string };
-  const { name } = req.user as { name: string };
+  const { name } = req.user as { name: string; id: string };
   const review = await findReviewService(name, title);
 
   return res.status(200).json(review);
