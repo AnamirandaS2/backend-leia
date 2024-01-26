@@ -8,6 +8,7 @@ import registerService from '../../services/user/register.service';
 import { user, admin, userLogin, adminLogin } from '../DataUser';
 import { prismaMock } from '../config/singleton';
 import 'dotenv/config';
+import resetPasswordService from '../../services/user/resetPassword.service';
 
 describe('Testando os Services user', () => {
 
@@ -37,8 +38,19 @@ describe('Testando os Services user', () => {
 
     const token = sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
 
-    return expect(generateToken(id)).toBe(token);
+    return expect(generateToken(id)).toStrictEqual(token);
+  });
+
+  it('Reset Password Service: Deve ser Possivel mudar a senha', async () => {
+
+    const {id} = user;
+    const newPassword = '87654321';
+
+    resetPasswordService(id, newPassword);
+    expect(prismaMock.user.update).toHaveBeenCalledTimes(1);
+
+    expect(prismaMock.user.update).not.toThrow();
   });
 
 });
-// resetPassaword.service e update.service estão ausentes
+// update.service esta ausente
