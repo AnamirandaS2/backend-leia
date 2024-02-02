@@ -17,6 +17,7 @@ export default async function checkToken(req: Request, res: Response, next: Next
   try {
     userId  = (verify(token, process.env.JWT_SECRET as string) as {id: string}).id;
   } catch(err) {
+    console.log(err);
     throw new AppError('Token inválido', 404);
   } 
 

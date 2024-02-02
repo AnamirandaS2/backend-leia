@@ -11,6 +11,7 @@ import checkToken from '../../middlewares/user/checkToken';
 import { admin, adminLogin, user, userLogin } from '../DataUser';
 import { prismaMock } from '../config/singleton';
 import 'dotenv/config';
+import { sign } from 'jsonwebtoken';
 
 describe('Testando os Middlewares user', () => {
 
@@ -112,10 +113,12 @@ describe('Testando os Middlewares user', () => {
   it('checkToken Middleware: Deve ser possivel verificar se o token é valido', async () => {
 
     const next = jest.fn().mockReturnValue('ok');
+    const { id } = user;
 
     await expect(checkToken(request, response, next)).rejects.toThrow('Token não informado');
-    
-    request.headers = { authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFhZDVhY2VhLTFhNTUtNDE3Ni1iZWQ3LWNlNDY4NWI4ODc1MCIsImlhdCI6MTcwNDk5NzM5MSwiZXhwIjoxNzA1NjAyMTkxfQ.ldl2Xwa5q55U-OYzjfcybTVlHMoFbH66VUADbOB1RaQ'};
+
+    const token = `Bearer ${  sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '7d' })}`;
+    request.headers = { authorization: token};
     
     prismaMock.user.findFirst.mockResolvedValueOnce(user);
     await checkToken(request, response, next);
