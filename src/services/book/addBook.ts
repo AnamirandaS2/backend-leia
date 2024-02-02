@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import supabase from '../../database/bucket';
 import prisma from '../../database/db';
 import { paramsBook } from '../../interfaces/book.interface';
@@ -6,7 +7,7 @@ import parseFilename from '../../utils/parseFilename';
 import { AppError } from './../../error';
 
 export default async function AddBookService(
-  { title, description, author, genre, pages, publishedAt, file_book, cover_file } : paramsBook) {
+  { title, description, author, genre, pages, file_book, cover_file } : paramsBook) {
     
   const bucket = await supabase.storage.getBucket('books');
   if (!bucket.data) 
@@ -16,9 +17,9 @@ export default async function AddBookService(
       fileSizeLimit: 52428800,
     });
   }
-
+  
   // Envia o livro para a supbase
-  const metadataBook = await supabase.storage.from('books').upload(parseFilename('', title, author), file_book.buffer, 
+  const metadataBook = await supabase.storage.from('books').upload(parseFilename('', title, author), (file_book as any).data, 
     {   
       cacheControl: '3600',
       upsert: false, 
@@ -30,7 +31,7 @@ export default async function AddBookService(
   }
 
   // Envia a capa do livro para a supbase
-  const metadataCover = await supabase.storage.from('books').upload(parseFilename('_cover', title, author), cover_file.buffer, 
+  const metadataCover = await supabase.storage.from('books').upload(parseFilename('_cover', title, author), (cover_file as any).data, 
     {   cacheControl: '3600',
       upsert: false, 
       contentType: cover_file.mimetype
@@ -43,7 +44,6 @@ export default async function AddBookService(
   const title_formated = parseFilename('', title);
   const autor_formated = parseFilename('', author);
   const genre_formated = parseFilename('', genre);
-
   const book = await prisma.book.create({ 
     data : {
       title: title_formated,
@@ -53,7 +53,6 @@ export default async function AddBookService(
       pages: Number(pages),
       cover: metadataCover.data.path,
       source: metadataBook.data.path,
-      publishedAt: new Date(publishedAt)
     },
     select: {
       title: true,
@@ -61,7 +60,6 @@ export default async function AddBookService(
       author: true,
       genre: true,
       pages: true,
-      publishedAt: true,
       createdAt: true,
       activities: {
         select: {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController } from '../controllers/user.controller';
+import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController, validateToken } from '../controllers/user.controller';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
 import checkEmailExistence from '../middlewares/user/checkEmailExistence';
 import checkLogin from '../middlewares/user/checkLogin';
@@ -21,5 +21,6 @@ useRouter.post('/forgot-password', verifyShape(forgotPasswordSchema), checkEmail
 useRouter.post('/recuperar-senha/:token', verifyShape(resetPasswordSchema), checkParamsToken, resetPasswordController);
 
 useRouter.put('', verifyShape(updateSchema), checkToken, updateController);
+useRouter.get('/validate-token', validateToken);
 
 export default useRouter;

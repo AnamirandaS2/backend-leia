@@ -5,7 +5,6 @@ import prisma from '../../database/db';
 import { AppError } from '../../error';
 
 export default async function checkToken(req: Request, res: Response, next: NextFunction) {
-  
   const { authorization } = req.headers;
   if (!authorization) throw new AppError('Token não informado', 401);
     
@@ -16,8 +15,6 @@ export default async function checkToken(req: Request, res: Response, next: Next
   req.user = {};
   
   try {
-    console.log('???', token);
-    console.log(verify(token, process.env.JWT_SECRET as string) as {id: string});
     userId  = (verify(token, process.env.JWT_SECRET as string) as {id: string}).id;
   } catch(err) {
     throw new AppError('Token inválido', 404);
@@ -32,6 +29,6 @@ export default async function checkToken(req: Request, res: Response, next: Next
     id : userId,
     ...user,
   };
-  
+    
   return next();
 }

@@ -1,6 +1,6 @@
 import prisma from '../../database/db';
 
-export default async function updateService({ id, author, title, description, genre, pages, publishedAt, cover }) {
+export default async function updateService({ id, author, title, description, genre, pages, cover }) {
   const newInfo = {
   } as { author: string; title: string; description: string; genre: string; pages: number; publishedAt: string; cover: string };
   
@@ -9,7 +9,6 @@ export default async function updateService({ id, author, title, description, ge
   description && (newInfo.description = description);
   genre && (newInfo.genre = genre);
   pages && (newInfo.pages = pages);
-  publishedAt && (newInfo.publishedAt = publishedAt);
   cover && (newInfo.cover = cover);
       
   const book = await prisma.book.update({
@@ -23,7 +22,6 @@ export default async function updateService({ id, author, title, description, ge
       description: !!description,
       genre: !!genre,
       pages: !!pages,
-      publishedAt: !!publishedAt,
       cover: !!cover,
       updatedAt: true,
     }

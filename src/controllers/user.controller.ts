@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
+import { verify } from 'jsonwebtoken';
 
+import prisma from '../database/db';
 import forgotPasswordService from '../services/user/forgotPassword.service';
 import generateToken from '../services/user/generateToken.service';
 import registerService from '../services/user/register.service';
@@ -49,4 +51,26 @@ export async function updateController(req: Request, res: Response)
   const user = await updateService({ id, name, password, avatar });
 
   return res.status(200).json(user);
+}
+
+export async function validateToken(req: Request, res: Response)
+{
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).send(false);
+
+  const [ , token ] = authorization.split(' ');
+  if(!token) return res.status(401).send(false);
+
+  let userId = '';
+  req.user = {};
+  
+  try {
+    userId  = (verify(token, process.env.JWT_SECRET as string) as {id: string}).id;
+    const user = await prisma.user.findFirst({ where: { id: userId }});
+    return res.status(200).send(!!user);
+
+  } catch(err) {
+    return res.status(401).send(false);
+  } 
+  
 }

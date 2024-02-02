@@ -6,15 +6,13 @@ import parseFilename from '../../utils/parseFilename';
 
 interface Params {
     author: string;
-    from: string;
-    to: string;
     genre: string;
     minPages: string;
     maxPages: string;
 }
 
 export default async function fetchBooksService({
-  author, from, to, genre, minPages, maxPages
+  author, genre, minPages, maxPages
 }: Params) {
   const books = await prisma.book.findMany({
     where: {
@@ -27,12 +25,8 @@ export default async function fetchBooksService({
         mode: 'insensitive',
       },
       pages: {
-        gte: Number(minPages),
+        gte: Number(minPages ?? 0),
         lte: Number(maxPages ?? 10000),
-      },
-      publishedAt: {
-        gte: new Date(from ?? '01-01-01'),
-        lte: new Date(to ?? '2100-01-01'),
       },
       enabled: true,
     },
@@ -43,7 +37,6 @@ export default async function fetchBooksService({
       author: true,
       genre: true,
       pages: true,
-      publishedAt: true,
       activities: {
         select: {
           page: true
