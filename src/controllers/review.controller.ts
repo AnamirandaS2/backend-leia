@@ -8,18 +8,19 @@ import sendReviewService from '../services/review/sendReview.service';
 import updateReviewService from '../services/review/updateReview.service';
 
 export async function fetchReview(req: Request, res: Response) {
-  const { title } = req.review as { title: string };
-  const { name } = req.user as { name: string; id: string };
-  const review = await findReviewService(name, title);
+  const { id, title } = req.review;
+  
+  const review = await findReviewService(id as string);
 
-  return res.status(200).json(review);
+  return res.status(200).json({ review, title });
 }
 
 export async function createReview(req: Request, res: Response) {
-  const { bookId, title, content } = req.body;
+  const { bookId, borrowDate, returnDate, responsibleDirector, location, prisionName, userCompleteName } = req.body;
+
   const { id: userId } = req.user as { id: string };
-  const { name } = req.user as { name: string };
-  const review = await createReviewService({ bookId, title, content, userId, name });
+
+  const review = await createReviewService({ bookId, userId, borrowDate, returnDate, responsibleDirector, location, prisionName, userCompleteName });
 
   return res.status(201).json(review);
 }

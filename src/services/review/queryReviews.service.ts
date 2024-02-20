@@ -17,6 +17,11 @@ export default async function queryReviewsService({
   from, 
   to 
 }: Props) {
+  let startDate = new Date(from || '1970-01-01');
+  if (isNaN(startDate.getTime())) startDate = new Date('1970-01-01');
+  let endDate = new Date(to || '2100-01-01');
+  if (isNaN(endDate.getTime())) endDate = new Date('2100-01-01');
+
   const reviews = await prisma.review.findMany({ 
     where: {
       title: {
@@ -40,8 +45,8 @@ export default async function queryReviewsService({
         },
       },
       createdAt: {
-        gte: new Date(from ?? '1970-01-01'),
-        lte: new Date(to ?? '2100-01-01'),
+        gte: startDate,
+        lte: endDate,
       },
     },
     include: {
@@ -50,12 +55,22 @@ export default async function queryReviewsService({
           author: true,
           title: true,
         } 
+      },
+      user: {
+        select: {
+          name: true,
+          avatar: true,
+          id: true,
+        }
       }
     },
   });
     
-  return reviews.map(review => {
-    delete review.userId;
-    return { ...review };
+  const result = reviews.map(review => {
+    const copy = { ...review, userId: undefined };
+    delete copy.userId;
+    return { ...copy };
   });
+
+  return result;
 }

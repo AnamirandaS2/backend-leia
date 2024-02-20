@@ -56,8 +56,16 @@ model Book {
 model Review {
   id                String      @id@default(uuid())
   userId            String
+  userCompleteName  String
+  prisionName       String
+  location          String
+  director          String
   bookId            String
+
   title             String
+  borrowDate        DateTime
+  returnDate        DateTime
+  
   approved          Boolean     @default(false)
   finished          Boolean     @default(false)
   user              User        @relation(fields: [userId], references: [id])

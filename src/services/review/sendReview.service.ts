@@ -26,19 +26,20 @@ interface SupportEmailServiceProps {
 }
 
 export default async function sendReviewService({ emails, review, user }: SupportEmailServiceProps) {
-  const { name } = user;
-  const { title: reviewTitle, bookId } = review;
+  const { name } = user as { name: string };
+  const { title: reviewTitle, bookId, id } = review as { title: string; bookId: string; id: string };
 
-  const { data } = await supabase.storage.from('reviews').download(parseFilename('', name, reviewTitle));
+  const { data } = await supabase.storage.from('reviews').download(parseFilename('', id as string));
   
-  const content = await data.text();
+  const content = await data!.text();
 
-  const { title: bookTitle, author: bookAuthor } = await prisma.book.findUnique({ where: { id: bookId } });
+  const { title: bookTitle, author: bookAuthor } = await prisma.book.findUnique({ where: { id: bookId } }) as { title: string; author: string };
 
   const date = new Date();
   
   await createReviewPdfService({ reviewTitle, name, bookTitle, bookAuthor, content, date });
   
+  console.log(emails);
   await transporter.sendMail(
     {
       from: process.env.SMTP_USER,

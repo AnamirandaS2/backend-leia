@@ -21,15 +21,26 @@ export default async function checkToken(req: Request, res: Response, next: Next
     throw new AppError('Token inválido', 404);
   } 
 
-  const user  =  
-    await prisma.user.findFirst({ where: { id: userId }, select: { email: true, name: true }}) || await prisma.admin.findFirst({ where: { id: userId }, select: { email: true, name: true, authorityLevel: true }});
+  const isUser = await prisma.user.findFirst({ where: { id: userId }, select: { email: true, name: true }});
+  const isAdmin  = await prisma.admin.findFirst({ where: { id: userId }, select: { email: true, name: true, authorityLevel: true }});
   
-  if (!user) throw new AppError('Usuário não encontrado', 404);
+  if (!isUser && !isAdmin) throw new AppError('Usuário não encontrado', 404);
     
-  req.user = {
-    id : userId,
-    ...user,
-  };
+  if (isUser) {
+    req.user = {
+      id : userId,
+      ...isUser,
+    };
+
+    req.query.userName = isUser.name;
+  }
+
+  if (isAdmin) {
+    req.admin = {
+      id : userId,
+      ...isAdmin,
+    };
+  }
     
   return next();
 }

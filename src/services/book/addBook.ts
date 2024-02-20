@@ -41,15 +41,12 @@ export default async function AddBookService(
     throw new AppError('Erro interno do servidor', 500);
   }
 
-  const title_formated = parseFilename('', title);
-  const autor_formated = parseFilename('', author);
-  const genre_formated = parseFilename('', genre);
   const book = await prisma.book.create({ 
-    data : {
-      title: title_formated,
+    data: {
+      title,
       description,
-      author : autor_formated,
-      genre : genre_formated,
+      author,
+      genre,
       pages: Number(pages),
       cover: metadataCover.data.path,
       source: metadataBook.data.path,

@@ -1,19 +1,25 @@
 import * as fs from 'fs/promises';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import supabase from '../../database/bucket';
 import prisma from '../../database/db';
 import parseFilename from '../../utils/parseFilename';
 
 interface Props {
-    content: string;
     bookId: string;
-    title: string;
+    borrowDate: string;
+    returnDate: string; 
+    responsibleDirector: string; 
+    location: string; 
+    prisionName: string; 
+    userCompleteName: string;
     userId: string;
-    name: string;
 }
 
-export default async function createReviewService({ bookId, content, title, userId, name }: Props) {
-  const tempFilename = `./${parseFilename('', name, title)}`;
+export default async function createReviewService({ bookId, borrowDate, location, prisionName, responsibleDirector, returnDate, userCompleteName, userId }: Props) {
+  const reviewId = uuidv4();
+  const tempFilename = `./${parseFilename('', reviewId)}`;
 
   const bucket = await supabase.storage.getBucket('reviews');
   if (!bucket.data) {
@@ -24,11 +30,11 @@ export default async function createReviewService({ bookId, content, title, user
     });
   }
     
-  await fs.appendFile(tempFilename, content);
+  await fs.appendFile(tempFilename, '');
 
   const file = await fs.readFile(tempFilename);
-
-  await supabase.storage.from('reviews').upload(parseFilename('', name, title), file, {
+  
+  await supabase.storage.from('reviews').upload(parseFilename('', reviewId ), file, {
     cacheControl: '3600',
     upsert: false,
     contentType: 'text/markdown',
@@ -36,10 +42,18 @@ export default async function createReviewService({ bookId, content, title, user
   
   await fs.rm(tempFilename);
 
+  console.log(bookId);
   const review = await prisma.review.create({ data: {
-    title,
-    userId,
+    id: reviewId,
+    title: 'Nova resenha',
+    borrowDate,
+    director: responsibleDirector,
+    location,
+    prisionName,
+    returnDate,
+    userCompleteName,
     bookId,
+    userId,
   }});
     
   return { ...review, userId: undefined };

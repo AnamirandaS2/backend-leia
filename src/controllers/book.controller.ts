@@ -10,9 +10,7 @@ export async function getBook(req : Request, res : Response)
 {
   const { title, author } = req.book as { title: string; author: string };
 
-  const book = await getBookService(title, author);
-
-  res.contentType('application/pdf');
+  const book = await getBookService(title, author) as string;
   return res.status(200).send(book);
 }
 
@@ -27,7 +25,6 @@ export async function queryBooks(req: Request, res: Response)
 
 export async function addBook(req : Request, res : Response)
 {
-  console.log(req.files);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { book, cover } = req.files as any;
   const { pages, description, author, genre, title } = req.body;
