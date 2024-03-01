@@ -27,7 +27,7 @@ export default async function AddBookService(
     });
 
   if (metadataBook.error){
-    throw new AppError('Erro interno do servidor', 500);
+    throw new AppError('Livro inválido', 400);
   }
 
   // Envia a capa do livro para a supbase
@@ -38,7 +38,7 @@ export default async function AddBookService(
     });
 
   if (metadataCover.error){
-    throw new AppError('Erro interno do servidor', 500);
+    throw new AppError('Capa inválida', 400);
   }
 
   const book = await prisma.book.create({ 

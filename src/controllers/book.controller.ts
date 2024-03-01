@@ -4,7 +4,9 @@ import addBookService from '../services/book/addBook';
 import deleteService from '../services/book/delete.service';
 import fetchBooksService from '../services/book/fetchBooks.service';
 import getBookService from '../services/book/getBook.service';
+import getReadingsService from '../services/book/getReadings.service';
 import updateService from '../services/book/updateBook';
+import updateReadingsService from '../services/book/updateReadings.service';
 
 export async function getBook(req : Request, res : Response)
 {
@@ -23,12 +25,18 @@ export async function queryBooks(req: Request, res: Response)
   return res.status(200).send(books);
 }
 
+export async function getReadings(req: Request, res: Response)
+{
+  const { id } = req.user;
+  const readings = await getReadingsService(id);
+  return res.status(200).send(readings);
+}
 export async function addBook(req : Request, res : Response)
 {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { book, cover } = req.files as any;
   const { pages, description, author, genre, title } = req.body;
-
+  
   const response = await addBookService({
     title, 
     description, 
@@ -40,6 +48,14 @@ export async function addBook(req : Request, res : Response)
   });
         
   return res.status(201).json(response);
+}
+
+export async function updateReadings(req: Request, res: Response)
+{
+  const { id: bookId } = req.book;
+  const { id: userId } = req.user;
+  await updateReadingsService(bookId, userId);
+  return res.status(204).send();
 }
 
 export async function updateBook(req: Request, res: Response)

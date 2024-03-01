@@ -21,7 +21,6 @@ export default async function checkEmailAvailability(req: Request, res: Response
   else
   {
     const error = new AppError('Erro Interno no Servidor.', 500);
-    console.log('Erro Aqui: ', error);
     throw error;
   }
 

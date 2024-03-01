@@ -5,6 +5,7 @@ export interface LoginInfos {
 
 export interface SimpleUser extends LoginInfos {
     name: string;
+    avatar: Express.Multer.File;
 }
 
 export type DataUser = User | Admin | null;

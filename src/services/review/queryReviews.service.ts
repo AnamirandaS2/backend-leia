@@ -7,6 +7,7 @@ interface Props {
     userName?: string;
     from?: string;
     to?: string;
+    userId?: string;
 }
 
 export default async function queryReviewsService({ 
@@ -15,13 +16,15 @@ export default async function queryReviewsService({
   bookAuthor, 
   userName, 
   from, 
-  to 
+  to,
+  userId,
 }: Props) {
   let startDate = new Date(from || '1970-01-01');
   if (isNaN(startDate.getTime())) startDate = new Date('1970-01-01');
   let endDate = new Date(to || '2100-01-01');
   if (isNaN(endDate.getTime())) endDate = new Date('2100-01-01');
 
+  console.log('id:', userId);
   const reviews = await prisma.review.findMany({ 
     where: {
       title: {
@@ -33,6 +36,7 @@ export default async function queryReviewsService({
           contains: userName,
           mode: 'insensitive',
         },
+        id: userId,
       },
       book: {
         title: {
@@ -65,6 +69,8 @@ export default async function queryReviewsService({
       }
     },
   });
+
+  console.log('reviews:', reviews);
     
   const result = reviews.map(review => {
     const copy = { ...review, userId: undefined };

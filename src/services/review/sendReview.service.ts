@@ -39,7 +39,6 @@ export default async function sendReviewService({ emails, review, user }: Suppor
   
   await createReviewPdfService({ reviewTitle, name, bookTitle, bookAuthor, content, date });
   
-  console.log(emails);
   await transporter.sendMail(
     {
       from: process.env.SMTP_USER,

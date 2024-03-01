@@ -8,7 +8,6 @@ export default async function checkCreationAvailable(req: Request, res: Response
   const { bookId } = req.body;
   const { id: userId } = req.user;
   const reviews = await prisma.review.findMany({ where: { bookId, userId  } });
-  console.log(bookId, userId, reviews);
 
   reviews.forEach(({ finished, approved }) => {
     if (!finished) throw new AppError('A review of this book is already in progress', 403);

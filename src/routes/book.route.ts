@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import fileupload from 'express-fileupload';
 
-import { addBook, deleteBook, queryBooks, updateBook, getBook } from '../controllers/book.controller';
+import { addBook, deleteBook, queryBooks, updateBook, getBook, updateReadings, getReadings } from '../controllers/book.controller';
 import checkBook from '../middlewares/book/checkBook';
 import checkToken from '../middlewares/user/checkToken';
 import { updateBookSchema } from '../schemas/ book.schema';
@@ -18,5 +18,6 @@ router.post('', checkToken, addBook);
 
 router.put('/:id', verifyShape(updateBookSchema), checkToken, checkBook, updateBook);
 router.delete('/:id', checkToken, checkBook, deleteBook);
-
+router.post('/update-reading-list/:id', checkToken, checkBook, updateReadings);
+router.get('/last-readings', checkToken, getReadings);
 export default router;

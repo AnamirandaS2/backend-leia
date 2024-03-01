@@ -15,6 +15,7 @@ model User {
   avatar            String?
   reviews           Review[]
   activities        Activity[]
+  reading           Reading[]
 
   approved          Boolean     @default(false)
   createdAt         DateTime    @default(now())
@@ -46,6 +47,7 @@ model Book {
   reviews           Review[]
   activities        Activity[]
   
+  reading           Reading[]
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
 
@@ -82,5 +84,14 @@ model Activity {
   book              Book        @relation(fields: [bookId], references: [id])
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @default(now())
+  @@id([userId, bookId])
+}
+
+model Reading {
+  userId           String      
+  bookId           String      
+  lastRead         DateTime
+  user             User        @relation(fields: [userId], references: [id])
+  book             Book        @relation(fields: [bookId], references: [id])
   @@id([userId, bookId])
 }

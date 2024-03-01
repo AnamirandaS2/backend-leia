@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 
@@ -11,8 +12,8 @@ import updateService from '../services/user/update.service';
 export async function registerController(req: Request, res: Response)
 {
   const { name, email, password } = req.body as { name: string; email: string; password: string };
-    
-  const user = await registerService({ name, email, password }, req);
+  const avatar = (req.file as any)?.avatar as any;
+  const user = await registerService({ name, email, password, avatar }, req);
 
   return res.status(201).json(user);
 }
@@ -45,7 +46,8 @@ export async function resetPasswordController(req: Request, res: Response)
 
 export async function updateController(req: Request, res: Response)
 {
-  const { name, password, avatar } = req.body;
+  const { name, password } = req.body;
+  const { avatar } = req.file as any;
   const { id } = req.user;
 
   const user = await updateService({ id, name, password, avatar });

@@ -23,7 +23,7 @@ export default async function checkToken(req: Request, res: Response, next: Next
 
   const isUser = await prisma.user.findFirst({ where: { id: userId }, select: { email: true, name: true }});
   const isAdmin  = await prisma.admin.findFirst({ where: { id: userId }, select: { email: true, name: true, authorityLevel: true }});
-  
+
   if (!isUser && !isAdmin) throw new AppError('Usuário não encontrado', 404);
     
   if (isUser) {

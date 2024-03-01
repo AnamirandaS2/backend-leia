@@ -1,26 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
 
 export class AppError extends Error {
-    public readonly status: number;
+  public readonly status: number;
 
-    constructor(_message: string, _status: number = 400,) {
-        super(_message);
-        this.status = _status;
-    }
+  constructor(_message: string, _status: number = 400,) {
+    super(_message);
+    this.status = _status;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
 
-    if (err instanceof AppError) {
-        return res.status(err.status).json({ message: err.message });
-    }
+  if (err instanceof AppError) {
+    return res.status(err.status).json({ message: err.message });
+  }
 
-    if (err.name === 'SyntaxError') {
-        res.status(400).json({ message: 'Please send a proper JSON object' });
-        return;
-    }
+  if (err.name === 'SyntaxError') {
+    res.status(400).json({ message: 'Please send a proper JSON object' });
+    return;
+  }
     
-    console.log(err);
-    res.status(500).json({ message: 'Error interno do servidor.' });
+  console.log(err);
+  res.status(500).json({ message: 'Error interno do servidor.' });
 }

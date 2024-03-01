@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import fileupload from 'express-fileupload';
 
 import { forgotPasswordController, loginController, registerController, resetPasswordController, updateController, validateToken } from '../controllers/user.controller';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
@@ -10,6 +11,7 @@ import { forgotPasswordSchema, loginSchema, registerSchema, resetPasswordSchema,
 import verifyShape from '../utils/verifyShape';
 
 const useRouter = Router();
+useRouter.use(fileupload());
 
 // register
 useRouter.post('/register', verifyShape(registerSchema), checkEmailAvailability, registerController);

@@ -47,9 +47,7 @@ export default async function checkLogin(req: Request, res: Response, next: Next
 
   } 
   else {
-
     const error = new AppError('Erro Interno no Servidor.', 500);
-    console.log('Erro Aqui: ', error);
     throw error;
   }
 
