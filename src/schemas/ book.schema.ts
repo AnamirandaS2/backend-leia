@@ -11,3 +11,11 @@ export const updateBookSchema = yup.object().shape({
 }).test('at-least-one-property', 'you must provide at least one', value =>
   !!(value.author || value.title || value.description || value.genre || value.pages || value.publishedAt || value.cover)
 );
+
+export const addBookSchema = yup.object().shape({
+  title: yup.string().required(),
+  description: yup.string().required(),
+  author: yup.string().required(),
+  pages: yup.number().required(),
+  genre: yup.string().required(),
+});

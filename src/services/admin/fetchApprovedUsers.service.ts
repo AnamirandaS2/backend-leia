@@ -1,11 +1,10 @@
 import prisma from '../../database/db';
 
-export default async function fetchUsersService() {
+export default async function fetchApprovedUsersService() {  
   const users = await prisma.user.findMany({
     where: {
-      approved: {
-        equals: true
-      }
+      approved: true,
+      role: 'USER'
     },
     select: {
       id: true,

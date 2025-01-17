@@ -37,16 +37,12 @@ export default async function fetchBooksService({
       author: true,
       genre: true,
       pages: true,
-      activities: {
-        select: {
-          page: true
-        }
-      }
     }
   });
 
   const booksAndCovers = await Promise.all(books.map(async (book)=> {
     const { data: { publicUrl }} = await supabase.storage.from('books').getPublicUrl(parseFilename('_cover', book.title, book.author));
+    console.log(publicUrl);
     return { ...book, cover: publicUrl };
   }));
 

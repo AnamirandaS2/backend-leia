@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client';
+
 export interface LoginInfos {
     email: string;
     password: string;
@@ -30,4 +32,5 @@ interface User {
     approved: boolean;
     createdAt: Date;
     updatedAt: Date;
+    role: Role;
 }

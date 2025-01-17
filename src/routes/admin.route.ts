@@ -1,25 +1,27 @@
 import { Router } from 'express';
 
-import { approveUser, fetchNonApprovedUsers, fetchUsers, getUser, loginController, registerController, rejectUser, validateToken } from '../controllers/admin.controller';
-import checkAdvancedAdminPermission from '../middlewares/admin/checkAdvancedAdminPermission';
+import { approveUser, fetchAllUsers, fetchNonApprovedUsers, fetchUsers, getUser, rejectUser } from '../controllers/admin.controller';
+import { registerController } from '../controllers/user.controller';
 import checkReviewExists from '../middlewares/review/checkReviewExists';
 import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
-import checkLogin from '../middlewares/user/checkLogin';
 import checkParamsId from '../middlewares/user/checkParamsId';
+import checkPermission from '../middlewares/user/checkPermission';
 import checkToken from '../middlewares/user/checkToken';
-import { loginSchema, registerSchema } from '../schemas/user.schema';
+import { registerSchema } from '../schemas/admin.schema';
 import verifyShape from '../utils/verifyShape';
 
-const useRouter = Router();
+const router = Router();
 
-useRouter.post('/register', verifyShape(registerSchema), checkToken, checkAdvancedAdminPermission, checkEmailAvailability, registerController);
-useRouter.post('/login', verifyShape(loginSchema), checkLogin, loginController);
-useRouter.get('', checkToken);
-useRouter.get('/non-approved-users', checkToken, fetchNonApprovedUsers);
-useRouter.post('/approve-review/:id', checkToken, checkReviewExists);
-useRouter.post('/approve-user/:id', checkToken, checkParamsId, approveUser);
-useRouter.post('/reject-user/:id', checkToken, checkParamsId, rejectUser);
-useRouter.get('/users', checkToken, fetchUsers);
-useRouter.get('/user/:reviewId', checkToken, checkReviewExists, getUser);
-useRouter.get('/validate-token', validateToken);
-export default useRouter;
+const checkIsAdmin = checkPermission(['ADMIN']);
+const checkIsProfessorOrAdmin = checkPermission(['PROFESSOR', 'ADMIN']);
+
+router.post('/register', verifyShape(registerSchema), checkToken, checkIsAdmin, checkEmailAvailability, registerController);
+router.get('/non-approved-users', checkToken, checkIsProfessorOrAdmin, fetchNonApprovedUsers);
+router.post('/approve-review/:id', checkToken, checkIsProfessorOrAdmin, checkReviewExists);
+router.post('/approve-user/:id', checkToken, checkIsProfessorOrAdmin, checkParamsId, approveUser);
+router.post('/reject-user/:id', checkToken, checkIsProfessorOrAdmin, checkParamsId, rejectUser);
+router.get('/approved-users', checkToken, checkIsProfessorOrAdmin, fetchUsers);
+router.get('/user/:reviewId', checkToken, checkIsProfessorOrAdmin, checkReviewExists, getUser);
+router.get('/all-users', checkToken, checkIsProfessorOrAdmin, fetchAllUsers);
+
+export default router;

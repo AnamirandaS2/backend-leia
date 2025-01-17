@@ -16,11 +16,11 @@ export async function fetchReview(req: Request, res: Response) {
 }
 
 export async function createReview(req: Request, res: Response) {
-  const { bookId, borrowDate, returnDate, responsibleDirector, location, prisionName, userCompleteName } = req.body;
+  const { bookId, borrowDate, returnDate } = req.body;
 
   const { id: userId } = req.user as { id: string };
 
-  const review = await createReviewService({ bookId, userId, borrowDate, returnDate, responsibleDirector, location, prisionName, userCompleteName });
+  const review = await createReviewService({ bookId, userId, borrowDate, returnDate });
 
   return res.status(201).json(review);
 }

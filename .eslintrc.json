@@ -91,7 +91,8 @@
                 "controller": "ignorePackages",
                 "service": "ignorePackages",
                 "interface": "ignorePackages",
-                "route": "ignorePackages"
+                "route": "ignorePackages",
+                "json": "ignorePackages"
             }
          ],
         "import/no-unresolved": "off"

@@ -1,42 +1,6 @@
-export interface User {
-  id?: string;
-  name?: string;
-  email?: string;
-  approved?: boolean;
-}
-  
-export interface Admin {
-  id?: string;
-  name?: string;
-  email?: string;
-  authorityLevel?: number;
-}
+import { User, Review, Book, Admin } from '../types';
 
-export interface Review {
-  id?: string;
-  userId?: string;
-  bookId?: string;
-  title?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  finished?: boolean;
-}  
-  
-export interface Book {
-  id?: string;
-  title?: string;
-  description?: string;
-  author?: string;
-  genre?: string;
-  pages?: number;
-  cover?: string;
-  source?: string;
-  publishedAt?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-  declare global {
+declare global {
     namespace Express {
       export interface Request {
         user: User;

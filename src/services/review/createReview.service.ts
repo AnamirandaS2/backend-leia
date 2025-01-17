@@ -7,17 +7,13 @@ import prisma from '../../database/db';
 import parseFilename from '../../utils/parseFilename';
 
 interface Props {
-    bookId: string;
-    borrowDate: string;
-    returnDate: string; 
-    responsibleDirector: string; 
-    location: string; 
-    prisionName: string; 
-    userCompleteName: string;
-    userId: string;
+  bookId: string;
+  borrowDate: string;
+  returnDate: string;  
+  userId: string;
 }
 
-export default async function createReviewService({ bookId, borrowDate, location, prisionName, responsibleDirector, returnDate, userCompleteName, userId }: Props) {
+export default async function createReviewService({ bookId, borrowDate, returnDate, userId }: Props) {
   const reviewId = uuidv4();
   const tempFilename = `./${parseFilename('', reviewId)}`;
 
@@ -47,11 +43,7 @@ export default async function createReviewService({ bookId, borrowDate, location
     id: reviewId,
     title: 'Nova resenha',
     borrowDate,
-    director: responsibleDirector,
-    location,
-    prisionName,
     returnDate,
-    userCompleteName,
     bookId,
     userId,
   }});

@@ -1,0 +1,218 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API do projeto Leia Imperatriz",
+    "description": "API criada para o projeto Leia Imperatriz feito por professores e alunos do ensino superior do Instituto Federal de Educação - Campus Imperatriz",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/lending/request": {
+      "post": {
+        "summary": "Solicitar empréstimo de livro",
+        "description": "Endpoint para solicitar um empréstimo de livro. Não quer dizer que o empréstimo já foi realizado, apenas foi solicitado.",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "bookId": {
+                  "type": "string",
+                  "description": "ID do livro que será emprestado"
+                },
+                "lendingDuration": {
+                  "type": "number",
+                  "description": "Por quanto tempo o livro será emprestado em dias"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Empréstimo solicitado com sucesso"
+          },
+          "404": {
+            "description": "Token inválido, usuário inexistente ou livro inexistente"
+          }
+        }
+      }
+    },
+    "/lending/approve/{requestId}": {
+      "post": {
+        "summary": "Aprova a solicitação de empréstimo",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da solicitação de empréstimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/reject/{requestId}": {
+      "post": {
+        "summary": "Rejeita a solicitação de empréstimo",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da solicitação de empréstimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/extension/request": {
+      "post": {
+        "summary": "Solicita a extensão de um empréstimo em {extraTime} dias",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "lendingId": {
+                  "type": "string",
+                  "description": "ID do empréstimo que deseja solicitar a extensão"
+                },
+                "extraTime": {
+                  "type": "number",
+                  "description": "Por quanto tempo deseja estender o empréstimo em dias"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/extension/approve/{requestId}": {
+      "post": {
+        "summary": "Aprova a solicitação de extensão de um empréstimo",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da solicitação de extensão"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/extension/reject/{requestId}": {
+      "post": {
+        "summary": "Rejeita a solicitação de extensão de um empréstimo",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da solicitação de extensão"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/return/{lendingId}": {
+      "put": {
+        "summary": "Confirma a devolução de um livro",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "lendingId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do empréstimo que deseja devolver"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/pendencies": {
+      "get": {
+        "summary": "Retorna todos os empréstimos realizados pelo usuário logado que estão pendentes de aprovação",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/pendencies/all": {
+      "get": {
+        "summary": "Retorna todos os empréstimos realizados por todos os usuários que estão pendentes de aprovação",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Insira o token com o prefixo \"Bearer \""
+    }
+  }
+}

@@ -14,7 +14,7 @@ export default async function AddBookService(
   {
     await supabase.storage.createBucket('books', {
       public: false,
-      fileSizeLimit: 52428800,
+      fileSizeLimit: 52428800 // 50 mb,
     });
   }
   
@@ -58,11 +58,6 @@ export default async function AddBookService(
       genre: true,
       pages: true,
       createdAt: true,
-      activities: {
-        select: {
-          page: true
-        }
-      }
     }
   });
 

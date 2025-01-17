@@ -7,48 +7,20 @@ import { AppError } from '../../error';
 export default async function checkLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
   
   const { email, password } = req.body;
-  const rota = req.baseUrl;
 
-  if (rota == '/user') {
+  const user = await prisma.user.findFirst({ where: { email }, select: { id: true, name: true, email: true, password: true, approved: true } });
+  if(!user) throw new AppError('Email Inválido', 401);
 
-    const user = await prisma.user.findFirst({ where: { email } });
-    if(!user) throw new AppError('Email Inválido', 401);
-
-    const isValidPassword = await compare(password, user.password);
-    if(!isValidPassword) throw new AppError('Senha Inválida', 401);
-
-    const isApproved = user.approved;
-    if (!isApproved) throw new AppError('Usuário não aprovado', 401);
-    
-    req.user = {
-      id: user.id,
-      name: user.name,
-      email: user.email
-    };
-
-    return next();
-
-  } 
-  else if (rota == '/admin') {
+  const isValidPassword = await compare(password, user.password);
   
-    const admin = await prisma.admin.findFirst({ where: { email } });
-    if(!admin) throw new AppError('Email Inválido', 401);
+  if(!isValidPassword) throw new AppError('Senha Inválida', 401);
+  if (!user.approved) throw new AppError('Usuário não aprovado', 401);
+    
+  req.user = {
+    id: user.id,
+    name: user.name,
+    email: user.email
+  };
 
-    const isValidPassword = await compare(password, admin.password);
-    if(!isValidPassword) throw new AppError('Senha Inválida', 401);
-
-    req.user = {
-      id: admin.id,
-      name: admin.name,
-      email: admin.email
-    };
-
-    return next();
-
-  } 
-  else {
-    const error = new AppError('Erro Interno no Servidor.', 500);
-    throw error;
-  }
-
+  next();
 }

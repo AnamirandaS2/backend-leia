@@ -9,15 +9,8 @@ export default async function checkParamsId(req: Request, res: Response, next: N
   if(!id) throw new AppError('Id do usuário não informado', 401);
 
   const user = await prisma.user.findUnique({ where: { id } });
-  if (!user)
-    throw new AppError('Usuário não encontrado', 404);
-
-  req.user = {
-    ...req.user,
-    email: user.email,
-    name: user.name,
-    approved: user.approved
-  };
+  
+  if (!user) throw new AppError('Usuário não encontrado', 404);
 
   return next();
 }

@@ -1,101 +1,135 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  PROFESSOR
+  ADMIN
 }
 
 model User {
-  id         String     @id @default(uuid())
-  name       String
-  email      String     @unique
-  password   String
-  avatar     String?
-  reviews    Review[]
-  activities Activity[]
-  reading    Reading[]
+  id       String  @id @default(uuid())
+  name     String
+  role     Role    @default(USER)
+  email    String  @unique
+  password String
+  avatar   String?
 
-  approved  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
+  reviews  Review[]
+  reading  ReadingTracking[]
+  borrowed BorrowedBook[]
 
-model Admin {
-  id             String  @id @default(uuid())
-  name           String
-  email          String  @unique
-  password       String
-  avatar         String?
-  authorityLevel Int     @default(1)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  approved       Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @default(now())
+  RequestLending RequestLending[]
 }
 
 model Book {
-  id          String     @id @default(uuid())
-  title       String     @unique
+  id          String  @id @default(uuid())
+  title       String  @unique
   description String
   author      String
   source      String
   cover       String
   genre       String
   pages       Int
-  enabled     Boolean    @default(true)
-  reviews     Review[]
-  activities  Activity[]
+  enabled     Boolean @default(true)
 
-  reading   Reading[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
+  reviews  Review[]
+  reading  ReadingTracking[]
+  borrowed BorrowedBook[]
 
-  sentAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  sentAt         DateTime?
+  RequestLending RequestLending[]
 
   @@unique([title, author])
 }
 
 model Review {
-  id               String @id @default(uuid())
-  userId           String
-  userCompleteName String
-  prisionName      String
-  location         String
-  director         String
-  bookId           String
+  id     String @id @default(uuid())
+  userId String
+  bookId String
 
   title      String
   borrowDate DateTime
   returnDate DateTime
 
-  approved  Boolean  @default(false)
-  finished  Boolean  @default(false)
-  user      User     @relation(fields: [userId], references: [id])
-  book      Book     @relation(fields: [bookId], references: [id])
+  approved Boolean @default(false)
+  finished Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
 
-model Activity {
-  userId    String
-  bookId    String
-  page      Int      @default(0)
-  user      User     @relation(fields: [userId], references: [id])
-  book      Book     @relation(fields: [bookId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@id([userId, bookId])
-}
-
-model Reading {
+model ReadingTracking {
   userId   String
   bookId   String
+  page     Int      @default(0)
   lastRead DateTime
-  user     User     @relation(fields: [userId], references: [id])
-  book     Book     @relation(fields: [bookId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
 
   @@id([userId, bookId])
+}
+
+model BorrowedBook {
+  id         String   @id @default(uuid())
+  userId     String
+  bookId     String
+  borrowDate DateTime
+  returnDate DateTime
+  returned   Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  extensionRequests RequestExtension[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([userId, bookId, borrowDate])
+}
+
+model RequestLending {
+  id              String    @id @default(uuid())
+  userId          String
+  bookId          String
+  requestAt       DateTime
+  lendingDuration Int
+  approved        Boolean   @default(false)
+  approvedAt      DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model RequestExtension {
+  id        String  @id @default(uuid())
+  lendingId String
+  extraTime Int
+  approved  Boolean @default(false)
+
+  lending   BorrowedBook @relation(fields: [lendingId], references: [id])
+  createdAt DateTime     @default(now())
 }

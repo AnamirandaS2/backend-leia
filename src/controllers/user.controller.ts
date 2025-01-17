@@ -1,19 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
+import * as yup from 'yup';
 
 import prisma from '../database/db';
+import { registerSchema } from '../schemas/admin.schema';
 import forgotPasswordService from '../services/user/forgotPassword.service';
 import generateToken from '../services/user/generateToken.service';
 import registerService from '../services/user/register.service';
 import resetPasswordService from '../services/user/resetPassword.service';
+import storeAvatar from '../services/user/storeAvatar.service';
 import updateService from '../services/user/update.service';
 
 export async function registerController(req: Request, res: Response)
 {
-  const { name, email, password } = req.body as { name: string; email: string; password: string };
-  const avatar = (req.file as any)?.avatar as any;
-  const user = await registerService({ name, email, password, avatar }, req);
+  const { name, email, password, role } = req.body as yup.InferType<typeof registerSchema>;
+    
+  const avatar = await storeAvatar(req.file as Express.Multer.File);
+  const user = await registerService({ name, email, password, avatar, role });
 
   return res.status(201).json(user);
 }
