@@ -1,13 +1,9 @@
 import prisma from '../../database/db';
 
-export default async function upsertPageService(bookId: string, userId: string, page: number) {
-  const activity = await prisma.activity.upsert({
-    create: {
-      bookId,
-      userId,
-      page,
-    },
-    update: {
+
+export default async function updateTracking(bookId: string, userId: string, page: number) {
+  const tracking = await prisma.readingTracking.update({
+    data: {
       page,
       updatedAt: new Date(),
     },
@@ -23,5 +19,5 @@ export default async function upsertPageService(bookId: string, userId: string, 
     }
   });
 
-  return activity;
+  return tracking;
 }

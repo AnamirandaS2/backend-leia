@@ -1,7 +1,7 @@
 import prisma from '../../database/db';
 
 export default async function updateReadingsService(bookId, userId) {
-  prisma.reading.upsert({
+  prisma.readingTracking.upsert({
     where: {
       userId_bookId: {
         bookId,

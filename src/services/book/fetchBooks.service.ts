@@ -14,7 +14,7 @@ interface Params {
 export default async function fetchBooksService({
   author, genre, minPages, maxPages
 }: Params) {
-  const books = await prisma.book.findMany({
+  return await prisma.book.findMany({
     where: {
       author: {
         contains: author ?? '',
@@ -39,12 +39,4 @@ export default async function fetchBooksService({
       pages: true,
     }
   });
-
-  const booksAndCovers = await Promise.all(books.map(async (book)=> {
-    const { data: { publicUrl }} = await supabase.storage.from('books').getPublicUrl(parseFilename('_cover', book.title, book.author));
-    console.log(publicUrl);
-    return { ...book, cover: publicUrl };
-  }));
-
-  return booksAndCovers;
 }

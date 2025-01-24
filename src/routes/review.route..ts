@@ -6,14 +6,14 @@ import checkCreationAvailable from '../middlewares/review/checkCreationAvailable
 import checkReviewExists from '../middlewares/review/checkReviewExists';
 import checkReviewIsFinished from '../middlewares/review/checkReviewIsFinished';
 import checkReviewIsFromUser from '../middlewares/review/checkReviewIsFromUser';
-import QueryingOwnReviews from '../middlewares/review/queryingOwnReviews';
+import queryingOwnReviews from '../middlewares/review/queryingOwnReviews';
 import checkToken from '../middlewares/user/checkToken';
 import { createReviewSchema, updateReviewSchema } from '../schemas/review.schema';
 import verifyShape from '../utils/verifyShape';
 
 const router = Router();
 
-router.get('/reviews?:bookTitle?:reviewTitle?:bookAuthor?:userName?:from?:to?:userId', checkToken, QueryingOwnReviews, queryReviews);
+router.get('/reviews?:bookTitle?:reviewTitle?:bookAuthor?:userName?:from?:to?:userId', checkToken, queryingOwnReviews, queryReviews);
 router.put('/:reviewId', verifyShape(updateReviewSchema), checkToken, checkReviewIsFromUser, updateReview);
 router.get('/:id', checkReviewExists, fetchReview);
 router.post('', verifyShape(createReviewSchema), checkToken, checkBook, checkCreationAvailable, createReview);

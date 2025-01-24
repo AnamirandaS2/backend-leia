@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { User } from '../../@types/express/custom';
+import { User } from '../../@types/types';
 import prisma from '../../database/db';
 import { AppError } from '../../error';
 

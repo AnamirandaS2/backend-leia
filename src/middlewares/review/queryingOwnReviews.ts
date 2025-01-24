@@ -3,7 +3,7 @@ import { verify } from 'jsonwebtoken';
 
 import { AppError } from '../../error';
 
-export default function QueryingOwnReviews(req: Request, res: Response, next: NextFunction) {
+export default function queryingOwnReviews(req: Request, res: Response, next: NextFunction) {
   const { id } = req.user;
   const { userId: userIdToken } = req.query as { userId: string | undefined};
 

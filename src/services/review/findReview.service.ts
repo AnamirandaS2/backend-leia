@@ -7,3 +7,5 @@ export default async function findReviewService(reviewId: string) {
   
   return text;
 }
+
+// tiktok.com/@laucozinhaveg/video/6988644169317190917

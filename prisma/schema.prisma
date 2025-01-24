@@ -26,10 +26,18 @@ model User {
   reading  ReadingTracking[]
   borrowed BorrowedBook[]
 
-  approved       Boolean          @default(false)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @default(now())
-  RequestLending RequestLending[]
+  approved          Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now())
+  RequestLending    RequestLending[]
+  Post              Post[]
+  PostLikes         PostLikes[]
+  FavoritedBooks    FavoritedBooks[]
+  Collection        Collection[]
+  Assignment        Assignment[]
+  AssignmentLikes   AssignmentLikes[]
+  PostComment       PostComment[]
+  AssignmentComment AssignmentComment[]
 }
 
 model Book {
@@ -42,6 +50,7 @@ model Book {
   genre       String
   pages       Int
   enabled     Boolean @default(true)
+  fileUrl     String
 
   reviews  Review[]
   reading  ReadingTracking[]
@@ -52,6 +61,10 @@ model Book {
 
   sentAt         DateTime?
   RequestLending RequestLending[]
+  Post           Post[]
+  FavoritedBooks FavoritedBooks[]
+  Collection     Collection?      @relation(fields: [collectionId], references: [id])
+  collectionId   String?
 
   @@unique([title, author])
 }
@@ -78,8 +91,9 @@ model Review {
 model ReadingTracking {
   userId   String
   bookId   String
-  page     Int      @default(0)
-  lastRead DateTime
+  page     Int       @default(0)
+  lastRead DateTime?
+  deadline DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -132,4 +146,110 @@ model RequestExtension {
 
   lending   BorrowedBook @relation(fields: [lendingId], references: [id])
   createdAt DateTime     @default(now())
+}
+
+model Post {
+  id              String @id @default(uuid())
+  content         String
+  userId          String
+  bookId          String
+  rating          Int
+  readingProgress Int
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book  Book        @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  likes PostLikes[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  PostComment PostComment[]
+}
+
+model PostLikes {
+  userId String
+  postId String
+  liked  Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
+}
+
+model PostComment {
+  id      String @id @default(uuid())
+  postId  String
+  userId  String
+  content String
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+}
+
+model FavoritedBooks {
+  userId String
+  bookId String
+
+  user User @relation(fields: [userId], references: [id])
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@id([userId, bookId])
+}
+
+model Collection {
+  id     String @id @default(uuid())
+  name   String
+  userId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  books Book[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Assignment {
+  id          String              @id @default(uuid())
+  content     String
+  professorId String
+  likes       AssignmentLikes[]
+  comments    AssignmentComment[]
+
+  professor User @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+}
+
+model AssignmentLikes {
+  userId       String
+  assignmentId String
+  liked        Boolean @default(false)
+
+  user       User       @relation(fields: [userId], references: [id])
+  assignment Assignment @relation(fields: [assignmentId], references: [id])
+
+  @@id([userId, assignmentId])
+}
+
+model AssignmentComment {
+  id           String @id @default(uuid())
+  assignmentId String
+  userId       String
+  content      String
+
+  user       User       @relation(fields: [userId], references: [id])
+  assignment Assignment @relation(fields: [assignmentId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
 }

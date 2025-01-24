@@ -24,7 +24,6 @@ export default async function queryReviewsService({
   let endDate = new Date(to || '2100-01-01');
   if (isNaN(endDate.getTime())) endDate = new Date('2100-01-01');
 
-  console.log('id:', userId);
   const reviews = await prisma.review.findMany({ 
     where: {
       title: {
@@ -69,8 +68,6 @@ export default async function queryReviewsService({
       }
     },
   });
-
-  console.log('reviews:', reviews);
     
   const result = reviews.map(review => {
     const copy = { ...review, userId: undefined };

@@ -2,9 +2,11 @@ import { Response, Request } from 'express';
 
 import addBookService from '../services/book/addBook';
 import deleteService from '../services/book/delete.service';
+import favoriteBookService from '../services/book/favoriteBook.service';
 import fetchBooksService from '../services/book/fetchBooks.service';
+import fetchFavoritesService from '../services/book/fetchFavorites.service';
 import getBookService from '../services/book/getBook.service';
-import getReadingsService from '../services/book/getReadings.service';
+import unfavoriteBookService from '../services/book/unfavoriteBook.service';
 import updateService from '../services/book/updateBook';
 import updateReadingsService from '../services/book/updateReadings.service';
 
@@ -25,15 +27,8 @@ export async function queryBooks(req: Request, res: Response)
   return res.status(200).send(books);
 }
 
-export async function getReadings(req: Request, res: Response)
-{
-  const { id } = req.user;
-  const readings = await getReadingsService(id);
-  return res.status(200).send(readings);
-}
 export async function addBook(req : Request, res : Response)
 {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { book, cover } = req.files as any;
   const { pages, description, author, genre, title } = req.body;
   
@@ -72,4 +67,26 @@ export async function deleteBook(req: Request, res: Response)
   const { id } = req.book as { id: string };
   await deleteService(id);
   return res.status(204).send();
+}
+
+export async function favoriteBook(req: Request, res: Response)
+{
+  const { id } = req.book as { id: string };
+  const { id: userId } = req.user;
+  await favoriteBookService(id, userId!);
+  return res.status(204).send();
+}
+
+export async function unfavoriteBook(req: Request, res: Response)
+{
+  const { id } = req.book as { id: string };
+  const { id: userId } = req.user;
+  await unfavoriteBookService(id, userId!);
+  return res.status(204).send();
+}
+
+export async function fetchFavorites(req: Request, res: Response) {
+  const { id } = req.user;
+  const favorites = await fetchFavoritesService(id!);
+  return res.status(200).send(favorites);
 }

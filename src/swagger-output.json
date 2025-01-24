@@ -11,6 +11,117 @@
     "http"
   ],
   "paths": {
+    "/user/register": {
+      "post": {
+        "summary": "Cria um usuário",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome do usuário",
+                  "required": ["name"]
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email do usuário",
+                  "required": ["email"]
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Senha do usuário",
+                  "required": ["password"]
+                },
+                "avatar": {
+                  "type": "object",
+                  "description": "Avatar do usuário. É enviado como arquivo via multipart/form-data"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "summary": "Faz login de um usuário",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Email do usuário",
+                  "required": ["email"]
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Senha do usuário",
+                  "required": ["password"]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "examples": {
+              "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIzYTU4ODQ1LWU5NzgtNDYyNi1hNWRjLTlmZWM2NDNhOTA3NiIsImlhdCI6MTczNzczMzk5OCwiZXhwIjoxNzM4MzM4Nzk4fQ.Rn1Pd25whysS5yhL3laifpcULFTdTa87skxyzNGmb9s"
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "put": {
+        "summary": "Atualiza um usuário. Ao menos 1 campo deve ser enviado",
+        "tags": ["User"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome do usuário"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Senha do usuário"
+                },
+                "avatar": {
+                  "type": "object",
+                  "description": "Avatar do usuário. É enviado como arquivo via multipart/form-data"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso"
+          }
+        }
+      }
+    },
     "/lending/request": {
       "post": {
         "summary": "Solicitar empréstimo de livro",
@@ -201,6 +312,912 @@
         "security": [{"Bearer": []}],
         "responses": {
           "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/lending/pendencies/closest": {
+      "get": {
+        "summary": "Retorna a data de devolução do empréstimo mais próximo",
+        "tags": ["Lending"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "returnDate": "2025-01-21T16:46:50.898Z"
+            }
+          }
+        }
+      }
+    },
+    "/posts": {
+      "post": {
+        "summary": "Cria um post sobre um livro",
+        "tags": ["Post"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "201": {
+            "description": "Post criado com sucesso"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todos os post feitos pelo usuário logado",
+        "tags": ["Post"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "id": "a74c556b-54c1-4152-b683-83c031bfdafb",
+                  "content": "Eu adorei esse livro. Nota 10. Não li 1 página.",
+                  "rating": 3,
+                  "createdAt": "2025-01-24T02:37:08.088Z",
+                  "likes": [
+                    {
+                      "userId": "35032321-aaaa-4763-aac4-783b7554e44b",
+                      "postId": "a74c556b-54c1-4152-b683-83c031bfdafb",
+                      "liked": false
+                    }
+                  ],
+                  "readingProgress": 1,
+                  "book": {
+                    "title": "Livro 1",
+                    "author": "Autor 1",
+                    "cover": "livro-1-autor-1._cover",
+                    "description": "Descrição do livro 1",
+                    "genre": "Comédia"
+                  }
+                },
+                {
+                  "id": "428824fa-77c0-409d-ae41-ac8f2e9ab6c5",
+                  "content": "Eu adorei esse livro. Nota 10. Não li 1 página.",
+                  "rating": 3,
+                  "createdAt": "2025-01-24T10:26:48.744Z",
+                  "likes": [],
+                  "readingProgress": 1,
+                  "book": {
+                    "title": "Livro 1",
+                    "author": "Autor 1",
+                    "cover": "livro-1-autor-1._cover",
+                    "description": "Descrição do livro 1",
+                    "genre": "Comédia"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/posts/{postId}": {
+      "get": {
+        "summary": "Retorna um post feito sobre um livro",
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do post"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "content": "Eu adorei esse livro. Nota 10. Não li 1 página.",
+              "rating": 3,
+              "readingProgress": 1,
+              "likes": 5,
+              "createdAt": "2025-01-24T02:37:08.088Z",
+              "book": {
+                "id": "c3f7a59c-4bd6-4a09-b92a-3b9d086533af",
+                "title": "Livro 1",
+                "description": "Descrição do livro 1",
+                "author": "Autor 1"
+              },
+              "user": {
+                "id": "35032321-aaaa-4763-aac4-783b7554e44b",
+                "name": "Ian",
+                "avatar": ""
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/like/{postId}": {
+      "put": {
+        "summary": "Dá ou remove like em um post",
+        "tags": ["Post"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "postId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do post"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "liked": true,
+              "postId": "a74c556b-54c1-4152-b683-83c031bfdafb",
+              "userId": "35032321-aaaa-4763-aac4-783b7554e44b"
+            }
+          }
+        }
+      }
+    },
+    "/posts/comment/{id}": {
+      "post": {
+        "summary": "Comenta em um post",
+        "tags": ["Post"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do post"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "description": "Conteúdo do comentário"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Comentário adicionado com sucesso"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todos os comentários feitos em um post",
+        "tags": ["Post"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do post"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "content": "Oi este é o meu comentário \n Hahahaha",
+                  "createdAt": "2025-01-24T17:01:23.967Z",
+                  "user": {
+                    "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                    "name": "Admin",
+                    "avatar": ""
+                  }
+                },
+                {
+                  "content": "Você tem razão!!! Nossa, 100% verdade!!!!!",
+                  "createdAt": "2025-01-24T17:08:44.222Z",
+                  "user": {
+                    "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                    "name": "Admin",
+                    "avatar": ""
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um comentário de um post. Professores e admnistradores podem deletar qualquer comentário, enquanto usuários só podem deletar seus próprios comentários",
+        "tags": ["Post"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do comentário"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/books": {
+      "post": {
+        "summary": "Adiciona um livro à biblioteca",
+        "tags": ["Book"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Título do livro"
+                },
+                "author": {
+                  "type": "string",
+                  "description": "Autor do livro"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Descrição do livro"
+                },
+                "genre": {
+                  "type": "string",
+                  "description": "Gênero do livro"
+                },
+                "pages": {
+                  "type": "number",
+                  "description": "Número de páginas do livro"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Livro adicionado com sucesso",
+            "examples": {
+              "title": "Livro 1",
+              "description": "Descrição do livro 1",
+              "author": "Autor 1",
+              "genre": "Comédia",
+              "pages": 10,
+              "fileUrl": "https://mynyljhswczjnytryiru.supabase.co/storage/v1/object/public/books/livro-1-autor-1-e9d15d95-87a4-49aa-8a7c-8f51f64e9250",
+              "cover": "https://mynyljhswczjnytryiru.supabase.co/storage/v1/object/public/books/livro-1-autor-1-e9d15d95-87a4-49aa-8a7c-8f51f64e9250._cover",
+              "createdAt": "2025-01-24T15:59:58.933Z"
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todos os livros da biblioteca",
+        "tags": ["Book"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "id": "73ba74c0-e743-4dd8-b055-8eb748d05967",
+                  "title": "Livro 1",
+                  "description": "Descrição do livro 1",
+                  "author": "Autor 1",
+                  "genre": "Comédia",
+                  "pages": 10
+                },
+                {
+                  "id": "8ae500d2-a68e-42e6-9661-677cf40fc56d",
+                  "title": "Livro 2",
+                  "description": "Descrição do livro 2",
+                  "author": "Autor 2",
+                  "genre": "Romance",
+                  "pages": 45
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/books/favorite/{bookId}": {
+      "post": {
+        "summary": "Adiciona um livro aos favoritos",
+        "tags": ["Book"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do livro que deseja adicionar aos favoritos"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove um livro dos favoritos",
+        "tags": ["Book"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do livro que deseja remover dos favoritos"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/collections": {
+      "post": {
+        "summary": "Cria uma coleção",
+        "tags": ["Collection"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome da coleção"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Coleção criada com sucesso",
+            "examples": {
+              "id": "05620521-3d73-4a5a-983d-b6a4f2f93afc",
+              "name": "Coleção 1"
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todas as coleções do usuário logado",
+        "tags": ["Collection"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "id": "0732f1d6-3950-4f48-ba1c-c923670f9b1a",
+                  "name": "Coleção 1",
+                  "books": [
+                    {
+                      "id": "0a146447-b0a3-483a-9096-bf74dd63c2c6",
+                      "name": "Coleção 1",
+                      "cover": "https://mynyljhswczjnytryiru.supabase.co/storage/v1/object/public/books/livro-1-autor-1._cover"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/collections/{collectionId}": {
+      "get": {
+        "summary": "Retorna uma coleção",
+        "tags": ["Collection"],
+        "parameters": [
+          {
+            "name": "collectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da coleção"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "id": "0a146447-b0a3-483a-9096-bf74dd63c2c6",
+              "name": "Coleção 1",
+              "books": [
+                {
+                  "id": "bdc36f86-fe4f-4dbe-8afd-e5b280ad3fe0",
+                  "title": "Livro 1",
+                  "cover": "https://mynyljhswczjnytryiru.supabase.co/storage/v1/object/public/books/livro-1-autor-1._cover",
+                  "author": "Autor 1"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma coleção",
+        "tags": ["Collection"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "collectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da coleção"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/collections/book/{collectionId}": {
+      "post": {
+        "summary": "Adiciona um livro a uma coleção",
+        "tags": ["Collection"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "collectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da coleção"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "bookId": {
+                  "type": "string",
+                  "description": "ID do livro que deseja adicionar à coleção"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove um livro de uma coleção",
+        "tags": ["Collection"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "collectionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da coleção"
+          },
+          {
+            "name": "bookId",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "ID do livro que deseja remover da coleção"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/reading": {
+      "get": {
+        "summary": "Retorna todos os livros que o usuário logado está lendo",
+        "tags": ["Reading"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "bookId": "73ba74c0-e743-4dd8-b055-8eb748d05967",
+                  "page": 0,
+                  "updatedAt": "2025-01-24T16:08:07.128Z",
+                  "deadline": "2024-01-28T03:00:00.000Z",
+                  "book": {
+                    "title": "Livro 1",
+                    "author": "Autor 1",
+                    "cover": "https://mynyljhswczjnytryiru.supabase.co/storage/v1/object/public/books/livro-1-autor-1-e9d15d95-87a4-49aa-8a7c-8f51f64e9250._cover"
+                  }
+                },
+                {
+                  "bookId": "8ae500d2-a68e-42e6-9661-677cf40fc56d",
+                  "page": 11,
+                  "updatedAt": "2025-01-24T16:11:53.990Z",
+                  "deadline": "2024-01-28T03:00:00.000Z",
+                  "book": {
+                    "title": "Livro 2",
+                    "author": "Autor 2",
+                    "cover": "https://mynyljhswczjnytryiru.supabase.co/storage/v1/object/public/books/livro-2-autor-2-37653fef-8617-4bb4-8df2-e26ea0bc1186._cover"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/reading/{bookId}": {
+      "post": {
+        "summary": "Inicia o acompanhamento da leitura de um livro",
+        "tags": ["Reading"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "bookId": {
+                  "type": "string",
+                  "description": "ID do livro que deseja iniciar a leitura"
+                },
+                "page": {
+                  "type": "number",
+                  "description": "Página a partir da qual o usuário começará o acompanhamento",
+                  "default": 0
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorn a última página em que o usuário logado parou de ler um livro",
+        "tags": ["Reading"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do livro"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "page": 10
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza a página em que o usuário logado parou de ler um livro",
+        "tags": ["Reading"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do livro"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "page": {
+                  "type": "number",
+                  "description": "Página em que o usuário parou de ler"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Para de acompanhar a leitura de um livro",
+        "tags": ["Reading"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "bookId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do livro que deseja parar de acompanhar a leitura"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assignments": {
+      "get": {
+        "summary": "Retorna todas as tarefas passadas pelos professores",
+        "tags": ["Assignment"],
+        "security": [{"Bearer": []}],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "id": "6682720e-70dc-467e-8d2e-8c9fe0b52bcd",
+                  "content": "Atividade sobre alguma coisa",
+                  "createdAt": "2025-01-24T18:30:59.660Z",
+                  "likes": [],
+                  "professor": {
+                    "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                    "name": "Admin",
+                    "avatar": ""
+                  }
+                },
+                {
+                  "id": "90ccf287-0425-4f1a-8ff7-1a00051e068a",
+                  "content": "Atividade 2 sobre alguma coisa 2",
+                  "createdAt": "2025-01-24T20:07:41.440Z",
+                  "likes": [],
+                  "professor": {
+                    "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                    "name": "Admin",
+                    "avatar": ""
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Cria uma tarefa",
+        "tags": ["Assignment"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "description": "Conteúdo da tarefa"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Tarefa criada com sucesso"
+          }
+        }
+      }
+    },
+    "/assignments/{id}": {
+      "get": {
+        "summary": "Retorna uma tarefa",
+        "tags": ["Assignment"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da tarefa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "content": "Atividade sobre alguma coisa",
+              "createdAt": "2025-01-24T18:30:59.660Z",
+              "professor": {
+                "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                "name": "Admin",
+                "avatar": ""
+              },
+              "likes": 0
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta uma tarefa",
+        "tags": ["Assignment"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da tarefa"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/assignments/like/{id}": {
+      "put": {
+        "summary": "Dá ou remove like em uma tarefa",
+        "tags": ["Assignment"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da tarefa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "liked": true,
+              "assignmentId": "6682720e-70dc-467e-8d2e-8c9fe0b52bcd",
+              "userId": "23a58845-e978-4626-a5dc-9fec643a9076"
+            }
+          }
+        }
+      }
+    },
+    "/assignments/comment/{id}": {
+      "post": {
+        "summary": "Comenta em uma tarefa",
+        "tags": ["Assignment"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da tarefa"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string",
+                  "description": "Conteúdo do comentário"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Comentário adicionado com sucesso"
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todos os comentários feitos em uma tarefa",
+        "tags": ["Assignment"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID da tarefa"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "examples": {
+              "swagger doesn't allow arrays directly as the example": "so here's the real example:",
+              "example": [
+                {
+                  "id": "297ddd58-d9e1-49c3-bb07-4911183ade05",
+                  "content": "Uou, este é o meu comentário!!!",
+                  "createdAt": "2025-01-24T20:41:02.691Z",
+                  "user": {
+                    "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                    "name": "Admin",
+                    "avatar": ""
+                  }
+                },
+                {
+                  "id": "3fc38a6b-c49f-4a81-981b-50fc2f3f10c5",
+                  "content": "Mais um comentário?? Simplesmente magnífico",
+                  "createdAt": "2025-01-24T20:43:27.184Z",
+                  "user": {
+                    "id": "23a58845-e978-4626-a5dc-9fec643a9076",
+                    "name": "Admin",
+                    "avatar": ""
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um comentário de uma tarefa. Professores e admnistradores podem deletar qualquer comentário, enquanto usuários só podem deletar seus próprios comentários",
+        "tags": ["Assignment"],
+        "security": [{"Bearer": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID do comentário"
+          }
+        ],
+        "responses": {
+          "204": {
             "description": "OK"
           }
         }

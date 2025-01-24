@@ -6,6 +6,7 @@ export interface User {
   email?: string;
   approved?: boolean;
   role?: Role;
+  avatar?: string;
 }
   
 export interface Admin {

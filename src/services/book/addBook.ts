@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import supabase from '../../database/bucket';
 import prisma from '../../database/db';
 import { paramsBook } from '../../interfaces/book.interface';
 import parseFilename from '../../utils/parseFilename';
-
+import { v4 } from 'uuid'
 import { AppError } from './../../error';
 
 export default async function AddBookService(
@@ -17,9 +16,11 @@ export default async function AddBookService(
       fileSizeLimit: 52428800 // 50 mb,
     });
   }
+
+  const id = v4();
   
   // Envia o livro para a supbase
-  const metadataBook = await supabase.storage.from('books').upload(parseFilename('', title, author), (file_book as any).data, 
+  const metadataBook = await supabase.storage.from('books').upload(parseFilename('', title, author, id), (file_book as any).data, 
     {   
       cacheControl: '3600',
       upsert: false, 
@@ -31,7 +32,7 @@ export default async function AddBookService(
   }
 
   // Envia a capa do livro para a supbase
-  const metadataCover = await supabase.storage.from('books').upload(parseFilename('_cover', title, author), (cover_file as any).data, 
+  const metadataCover = await supabase.storage.from('books').upload(parseFilename('_cover', title, author, id), (cover_file as any).data, 
     {   cacheControl: '3600',
       upsert: false, 
       contentType: cover_file.mimetype
@@ -40,6 +41,9 @@ export default async function AddBookService(
   if (metadataCover.error){
     throw new AppError('Capa inválida', 400);
   }
+  
+  const { data: { publicUrl: cover } } = supabase.storage.from('books').getPublicUrl(parseFilename('_cover', title, author, id));
+  const { data: { publicUrl: fileUrl } } = supabase.storage.from('books').getPublicUrl(parseFilename('', title, author, id));
 
   const book = await prisma.book.create({ 
     data: {
@@ -47,8 +51,9 @@ export default async function AddBookService(
       description,
       author,
       genre,
+      cover,
+      fileUrl,
       pages: Number(pages),
-      cover: metadataCover.data.path,
       source: metadataBook.data.path,
     },
     select: {
@@ -57,6 +62,8 @@ export default async function AddBookService(
       author: true,
       genre: true,
       pages: true,
+      fileUrl: true,
+      cover: true,
       createdAt: true,
     }
   });

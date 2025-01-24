@@ -1,7 +1,7 @@
 import prisma from '../../database/db';
 
 export default async function getPageService(bookId: string, userId: string) {
-  const page = await prisma.activity.findUnique({
+  const reading = await prisma.readingTracking.findUnique({
     where: {
       userId_bookId: {
         bookId,
@@ -13,5 +13,5 @@ export default async function getPageService(bookId: string, userId: string) {
     }
   });
 
-  return page;
+  return reading
 }

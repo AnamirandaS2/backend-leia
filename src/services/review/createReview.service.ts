@@ -38,7 +38,6 @@ export default async function createReviewService({ bookId, borrowDate, returnDa
   
   await fs.rm(tempFilename);
 
-  console.log(bookId);
   const review = await prisma.review.create({ data: {
     id: reviewId,
     title: 'Nova resenha',

@@ -1,7 +1,7 @@
 import { Role } from '@prisma/client';
 import { Router } from 'express';
 
-import { approveRequest, approveExtensionRequest, getPendencies, getPendenciesById, rejectRequest, rejectExtensionRequest, requestExtension, requestLending, returnBook } from '../controllers/lending.controller';
+import { approveRequest, approveExtensionRequest, getPendencies, getPendenciesById, rejectRequest, rejectExtensionRequest, requestExtension, requestLending, returnBook, getClosestReturnDate } from '../controllers/lending.controller';
 import { checkBook, checkLendingFromUser, checkLendingExists, checkRequest } from '../middlewares/lending/';
 import checkExtensionRequest from '../middlewares/lending/checkExtensionRequest';
 import checkPermission from '../middlewares/user/checkPermission';
@@ -21,5 +21,6 @@ router.post('/extension/reject/:requestId', checkToken, isProfessorOrAdmin, chec
 router.put('/return/:lendingId', checkToken, checkLendingExists, isProfessorOrAdmin, checkLendingExists, returnBook);
 router.get('/pendencies', checkToken, getPendenciesById);
 router.get('/pendencies/all', checkToken, isProfessorOrAdmin, getPendencies);
+router.get('/pendencies/closest', checkToken, getClosestReturnDate);
   
 export default router;

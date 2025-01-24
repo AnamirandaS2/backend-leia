@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import approveLendingExtensionService from '../services/lending/extendLending.service';
+import getClosestReturnDateService from '../services/lending/getClosestReturn.service';
 import getNonReturnedBooksService from '../services/lending/getNonReturned.service';
 import getPendenciesByIdService from '../services/lending/getPendenciesById.service';
 import lendBookService from '../services/lending/lendBook.service';
@@ -98,4 +99,12 @@ export async function getPendencies(req: Request, res: Response) {
   const pendencies = await getNonReturnedBooksService();
 
   return res.status(200).json(pendencies);
+}
+
+export async function getClosestReturnDate(req: Request, res: Response) {
+  const { id } = req.user;
+
+  const closest = await getClosestReturnDateService(id!);
+
+  return res.status(200).json(closest);
 }

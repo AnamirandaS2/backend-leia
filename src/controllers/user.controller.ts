@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import * as yup from 'yup';
@@ -11,13 +10,16 @@ import registerService from '../services/user/register.service';
 import resetPasswordService from '../services/user/resetPassword.service';
 import storeAvatar from '../services/user/storeAvatar.service';
 import updateService from '../services/user/update.service';
+import { v4 } from 'uuid';
+import deleteAvatar from '../services/user/deleteAvatar.service';
 
 export async function registerController(req: Request, res: Response)
 {
   const { name, email, password, role } = req.body as yup.InferType<typeof registerSchema>;
     
-  const avatar = await storeAvatar(req.file as Express.Multer.File);
-  const user = await registerService({ name, email, password, avatar, role });
+  const id = v4();
+  const avatar = await storeAvatar(id, (req.files as any).avatar as Express.Multer.File);
+  const user = await registerService({ id, name, email, password, avatar, role });
 
   return res.status(201).json(user);
 }
@@ -51,10 +53,20 @@ export async function resetPasswordController(req: Request, res: Response)
 export async function updateController(req: Request, res: Response)
 {
   const { name, password } = req.body;
-  const { avatar } = req.file as any;
-  const { id } = req.user;
+  const avatar = (req.files as any)?.avatar;
+  const { id, avatar: hasAvatar } = req.user;
 
-  const user = await updateService({ id, name, password, avatar });
+  let avatarUrl = hasAvatar;
+
+  if (avatar) {
+    if (hasAvatar) {
+      await deleteAvatar(id!);
+    }
+
+    avatarUrl = await storeAvatar(id!, avatar);
+  }
+
+  const user = await updateService({ id: id!, name, password, avatar: avatarUrl });
 
   return res.status(200).json(user);
 }

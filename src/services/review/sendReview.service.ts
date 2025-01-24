@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 
 import { google } from 'googleapis';
 
-import type { Review, User } from '../../@types/express/custom';
+import type { Review, User } from '../../@types/types';
 import supabase from '../../database/bucket';
 import prisma from '../../database/db';
 import transporter from '../../utils/nodemailer';
