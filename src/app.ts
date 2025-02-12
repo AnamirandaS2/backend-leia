@@ -16,13 +16,21 @@ import user from './routes/user.route';
 import swaggerDocs from './swagger-output.json';
 import collections from './routes/collections.route';
 import assignments from './routes/assignments.route';
+import fs from 'fs';
+import path from 'path';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(`${__dirname  }/images`));
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+const css = fs.readFileSync(
+  path.resolve(__dirname, '../node_modules/swagger-ui-dist/swagger-ui.css'),
+  'utf8'
+);
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: css }));
 
 app.use('/user', user);
 app.use('/admin', admin);
