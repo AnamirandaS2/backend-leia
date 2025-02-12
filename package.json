@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "vercel-build": "echo hello"
   },
   "dependencies": {
     "@prisma/client": "^5.5.2",

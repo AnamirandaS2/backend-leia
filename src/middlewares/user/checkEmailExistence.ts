@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import prisma from '../../database/db';
 import { AppError } from '../../error';
+import { User } from '../../@types/types';
 
 export default async function checkEmailExistence(req: Request, res: Response, next: NextFunction) {
   const { email } = req.body as { email: string };
@@ -9,6 +10,6 @@ export default async function checkEmailExistence(req: Request, res: Response, n
 
   if (!user) throw new AppError('Email não cadastrado!', 404);
 
-  req.user = { ...user };
+  req.user = user as User;
   return next();
 }
