@@ -31,6 +31,7 @@ export async function queryBooks(req: Request, res: Response) {
     maxPages: string;
     title: string;
   };
+  const userId = req.user?.id;
 
   const books = await fetchBooksService({
     author,
@@ -38,6 +39,7 @@ export async function queryBooks(req: Request, res: Response) {
     minPages,
     maxPages,
     title,
+    userId,
   });
   return res.status(200).send(books);
 }

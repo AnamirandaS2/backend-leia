@@ -10,6 +10,7 @@ interface Params {
   minPages: string;
   maxPages: string;
   title: string;
+  userId?: string;
 }
 
 export default async function fetchBooksService({
@@ -18,8 +19,9 @@ export default async function fetchBooksService({
   minPages,
   maxPages,
   title,
+  userId,
 }: Params) {
-  return await prisma.book.findMany({
+  const books = await prisma.book.findMany({
     where: {
       title: {
         contains: title ?? "",
@@ -49,4 +51,20 @@ export default async function fetchBooksService({
       cover: true,
     },
   });
+
+  if (!userId) {
+    return books.map((book) => ({ ...book, isFavorited: false }));
+  }
+
+  const favoriteBooks = await prisma.favoritedBooks.findMany({
+    where: { userId },
+    select: { bookId: true },
+  });
+
+  const favoriteBookIds = new Set(favoriteBooks.map((fav) => fav.bookId));
+
+  return books.map((book) => ({
+    ...book,
+    isFavorited: favoriteBookIds.has(book.id),
+  }));
 }
