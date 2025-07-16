@@ -1,28 +1,31 @@
 // author, from, to, genre, minPages = 0, maxPages, enabled = true
 
-import supabase from '../../database/bucket';
-import prisma from '../../database/db';
-import parseFilename from '../../utils/parseFilename';
+import supabase from "../../database/bucket";
+import prisma from "../../database/db";
+import parseFilename from "../../utils/parseFilename";
 
 interface Params {
-    author: string;
-    genre: string;
-    minPages: string;
-    maxPages: string;
+  author: string;
+  genre: string;
+  minPages: string;
+  maxPages: string;
 }
 
 export default async function fetchBooksService({
-  author, genre, minPages, maxPages
+  author,
+  genre,
+  minPages,
+  maxPages,
 }: Params) {
   return await prisma.book.findMany({
     where: {
       author: {
-        contains: author ?? '',
-        mode: 'insensitive',
+        contains: author ?? "",
+        mode: "insensitive",
       },
       genre: {
-        contains: genre ?? '',
-        mode: 'insensitive',
+        contains: genre ?? "",
+        mode: "insensitive",
       },
       pages: {
         gte: Number(minPages ?? 0),
@@ -37,6 +40,7 @@ export default async function fetchBooksService({
       author: true,
       genre: true,
       pages: true,
-    }
+      cover: true,
+    },
   });
 }

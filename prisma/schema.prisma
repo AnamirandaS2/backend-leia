@@ -51,6 +51,8 @@ model Book {
   pages       Int
   enabled     Boolean @default(true)
   fileUrl     String
+  volume      Int?
+  edition     Int?
 
   reviews  Review[]
   reading  ReadingTracking[]
