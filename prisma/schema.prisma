@@ -53,6 +53,8 @@ model Book {
   fileUrl     String
   volume      Int?
   edition     Int?
+  hasPhysicalCopy      Boolean @default(false)
+  physicalCopyQuantity Int?
 
   reviews  Review[]
   reading  ReadingTracking[]

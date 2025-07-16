@@ -34,4 +34,6 @@ export const addBookSchema = yup.object().shape({
   genre: yup.string().required(),
   volume: yup.number(),
   edition: yup.number(),
+  hasPhysicalCopy: yup.boolean(),
+  physicalCopyQuantity: yup.number(),
 });

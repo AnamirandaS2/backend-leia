@@ -8,4 +8,6 @@ export interface paramsBook {
   cover_file: Express.Multer.File;
   volume?: number;
   edition?: number;
+  hasPhysicalCopy?: boolean;
+  physicalCopyQuantity?: number;
 }

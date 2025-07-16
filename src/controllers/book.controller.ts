@@ -44,8 +44,17 @@ export async function queryBooks(req: Request, res: Response) {
 
 export async function addBook(req: Request, res: Response) {
   const { file, cover } = req.files as any;
-  const { pages, description, author, genre, title, volume, edition } =
-    req.body;
+  const {
+    pages,
+    description,
+    author,
+    genre,
+    title,
+    volume,
+    edition,
+    hasPhysicalCopy,
+    physicalCopyQuantity,
+  } = req.body;
 
   const response = await addBookService({
     title,
@@ -55,6 +64,8 @@ export async function addBook(req: Request, res: Response) {
     pages,
     volume,
     edition,
+    hasPhysicalCopy,
+    physicalCopyQuantity,
     file_book: file,
     cover_file: cover,
   });

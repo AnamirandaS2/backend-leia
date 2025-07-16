@@ -15,6 +15,8 @@ export default async function AddBookService({
   cover_file,
   volume,
   edition,
+  hasPhysicalCopy,
+  physicalCopyQuantity,
 }: paramsBook) {
   const bucket = await supabase.storage.getBucket("books");
   if (!bucket.data) {
@@ -74,6 +76,10 @@ export default async function AddBookService({
       pages: Number(pages),
       volume: volume ? Number(volume) : undefined,
       edition: edition ? Number(edition) : undefined,
+      hasPhysicalCopy: hasPhysicalCopy ?? false,
+      physicalCopyQuantity: physicalCopyQuantity
+        ? Number(physicalCopyQuantity)
+        : undefined,
       source: metadataBook.data.path,
     },
     select: {
