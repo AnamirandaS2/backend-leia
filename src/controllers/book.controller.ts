@@ -23,14 +23,22 @@ export async function queryBooks(req: Request, res: Response) {
     genre,
     minPages = "0",
     maxPages,
+    title,
   } = req.query as {
     author: string;
     genre: string;
     minPages: string;
     maxPages: string;
+    title: string;
   };
 
-  const books = await fetchBooksService({ author, genre, minPages, maxPages });
+  const books = await fetchBooksService({
+    author,
+    genre,
+    minPages,
+    maxPages,
+    title,
+  });
   return res.status(200).send(books);
 }
 

@@ -9,6 +9,7 @@ interface Params {
   genre: string;
   minPages: string;
   maxPages: string;
+  title: string;
 }
 
 export default async function fetchBooksService({
@@ -16,9 +17,14 @@ export default async function fetchBooksService({
   genre,
   minPages,
   maxPages,
+  title,
 }: Params) {
   return await prisma.book.findMany({
     where: {
+      title: {
+        contains: title ?? "",
+        mode: "insensitive",
+      },
       author: {
         contains: author ?? "",
         mode: "insensitive",
