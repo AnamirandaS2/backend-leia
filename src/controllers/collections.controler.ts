@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
-import createCollectionService from '../services/collection/createCollection.service';
-import getAllCollectionsService from '../services/collection/getAllCollections.service';
-import getCollectionService from '../services/collection/getCollection.service';
-import addBookToCollectionService from '../services/collection/addBook.service';
-import deleteCollectionService from '../services/collection/deleteCollection.service';
-import deleteBookService from '../services/collection/deleteBook.service';
+import { Request, Response } from "express";
+import createCollectionService from "../services/collection/createCollection.service";
+import getAllCollectionsService from "../services/collection/getAllCollections.service";
+import getCollectionService from "../services/collection/getCollection.service";
+import addBookToCollectionService from "../services/collection/addBook.service";
+import deleteCollectionService from "../services/collection/deleteCollection.service";
+import deleteBookService from "../services/collection/deleteBook.service";
 
 export async function createCollection(req: Request, res: Response) {
   const { id } = req.user;
@@ -24,17 +24,18 @@ export async function getAllCollections(req: Request, res: Response) {
 
 export async function getCollection(req: Request, res: Response) {
   const { id } = req.params;
-  
+
   const collection = await getCollectionService(id);
 
   res.status(200).json(collection);
 }
 
 export async function addBook(req: Request, res: Response) {
-  const { id } = req.params;
+  const { id: collectionId } = req.params;
   const { bookId } = req.body;
+  const { id: userId } = req.user;
 
-  await addBookToCollectionService(id, bookId);
+  await addBookToCollectionService(collectionId, bookId, userId!);
 
   res.sendStatus(204);
 }
@@ -48,10 +49,9 @@ export async function deleteCollection(req: Request, res: Response) {
 }
 
 export async function deleteBook(req: Request, res: Response) {
-  const { id } = req.params;
-  const { bookId } = req.body;
+  const { id: collectionId, bookId } = req.params;
 
-  await deleteBookService(id, bookId);
+  await deleteBookService(collectionId, bookId);
 
   res.sendStatus(204);
 }

@@ -1,21 +1,32 @@
 import prisma from "../../database/db";
 
 export default async function getCollectionService(collectionId: string) {
-  return await prisma.collection.findUnique({
+  const collection = await prisma.collection.findUnique({
     where: {
-      id: collectionId
+      id: collectionId,
     },
-    select: {
-      id: true,
-      name: true,
+    include: {
       books: {
         select: {
-          id: true,
-          title: true,
-          cover: true,
-          author: true,
-        }
-      }
-    }
-  })
+          book: {
+            select: {
+              id: true,
+              title: true,
+              author: true,
+              cover: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!collection) {
+    return null;
+  }
+
+  return {
+    ...collection,
+    books: collection.books.map((b) => b.book),
+  };
 }

@@ -3,23 +3,32 @@ import prisma from "../../database/db";
 export default async function getAllCollectionsService(userId: string) {
   const collections = await prisma.collection.findMany({
     where: {
-      userId
+      userId,
     },
-    select: {
-      id: true,
-      name: true,
+    include: {
       books: {
-        take: 1,
-        select: {
-          cover: true,
-        }
-      }
-    }
-  })
+        // This is the relation to the join table BooksOnCollections
+        include: {
+          book: {
+            // This is the relation from the join table to the Book model
+            select: {
+              id: true,
+              cover: true,
+            },
+          },
+        },
+        take: 4,
+      },
+    },
+  });
 
-  return collections.map( collection => ({
+  // Transform the data to match the frontend's expected structure
+  return collections.map((collection) => ({
     id: collection.id,
     name: collection.name,
-    cover: collection.books[0]?.cover
-  }))
+    userId: collection.userId,
+    createdAt: collection.createdAt,
+    updatedAt: collection.updatedAt,
+    books: collection.books.map((item) => item.book),
+  }));
 }

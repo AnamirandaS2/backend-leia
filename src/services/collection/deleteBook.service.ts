@@ -1,16 +1,15 @@
 import prisma from "../../database/db";
 
-export default async function deleteBookService(collectionId: string, bookId: string) {
-  await prisma.collection.update({
+export default async function deleteBookService(
+  collectionId: string,
+  bookId: string
+) {
+  await prisma.booksOnCollections.delete({
     where: {
-      id: collectionId
+      bookId_collectionId: {
+        bookId,
+        collectionId,
+      },
     },
-    data: {
-      books: {
-        disconnect: {
-          id: bookId
-        }
-      }
-    }
-  })
+  });
 }

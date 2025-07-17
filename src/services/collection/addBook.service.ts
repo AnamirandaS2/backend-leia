@@ -1,16 +1,15 @@
 import prisma from "../../database/db";
 
-export default async function addBookToCollectionService(collectionId: string, bookId: string) {
-  await prisma.collection.update({
-    where: {
-      id: collectionId
-    },
+export default async function addBookToCollectionService(
+  collectionId: string,
+  bookId: string,
+  userId: string
+) {
+  await prisma.booksOnCollections.create({
     data: {
-      books: {
-        connect: {
-          id: bookId
-        }
-      }
-    }
-  })
+      collectionId,
+      bookId,
+      assignedBy: userId,
+    },
+  });
 }
