@@ -11,10 +11,8 @@ import updateService from "../services/book/updateBook";
 import updateReadingsService from "../services/book/updateReadings.service";
 
 export async function getBook(req: Request, res: Response) {
-  const { title, author } = req.book as { title: string; author: string };
-
-  const book = (await getBookService(title, author)) as string;
-  return res.status(200).send(book);
+  const book = req.book;
+  return res.status(200).json(book);
 }
 
 export async function queryBooks(req: Request, res: Response) {

@@ -1,23 +1,26 @@
-import prisma from '../../database/db';
+import prisma from "../../database/db";
+import { AppError } from "../../error";
 
-
-export default async function updateTracking(bookId: string, userId: string, page: number) {
-  const tracking = await prisma.readingTracking.update({
-    data: {
-      page,
-      updatedAt: new Date(),
-    },
-    where: {
-      userId_bookId: {
-        bookId,
-        userId,
-      },
-    },
-    select: {
-      page: true,
-      updatedAt: true,
-    }
+export default async function updateTracking(
+  readingTrackingId: string,
+  page: number
+) {
+  const reading = await prisma.readingTracking.findUnique({
+    where: { id: readingTrackingId },
   });
 
-  return tracking;
+  if (!reading) {
+    throw new AppError("Leitura não encontrada.", 404);
+  }
+
+  const updatedReading = await prisma.readingTracking.update({
+    where: {
+      id: readingTrackingId,
+    },
+    data: {
+      page,
+    },
+  });
+
+  return updatedReading;
 }

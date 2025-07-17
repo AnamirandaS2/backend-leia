@@ -1,17 +1,17 @@
-import { ReadingTracking } from '@prisma/client';
-
-import { User, Review, Book, Admin } from '../types';
+import { Book } from "@prisma/client";
+import { ReadingTracking } from "@prisma/client";
 
 declare global {
-    namespace Express {
-      export interface Request {
-        user: User;
-        readingTracking: ReadingTracking;
-        review: Review;
-        book: Book;
-        admin: Admin;
-      }
+  namespace Express {
+    interface Request {
+      user: {
+        id: string;
+        name: string;
+        email: string;
+        role: "USER" | "PROFESSOR" | "ADMIN";
+      };
+      book: Book;
+      reading: ReadingTracking;
     }
   }
-  
-export default global;
+}

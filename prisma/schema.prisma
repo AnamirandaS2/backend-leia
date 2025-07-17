@@ -93,19 +93,19 @@ model Review {
 }
 
 model ReadingTracking {
-  userId   String
-  bookId   String
-  page     Int       @default(0)
-  lastRead DateTime?
-  deadline DateTime
+  id        String    @id @default(uuid())
+  userId    String
+  bookId    String
+  page      Int       @default(0)
+  deadline  DateTime?
+  startedAt DateTime  @default(now())
+  finished  Boolean   @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
-
-  @@id([userId, bookId])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
 }
 
 model BorrowedBook {
