@@ -1,6 +1,6 @@
 import prisma from "../../database/db";
 
-export default async function getPostsService() {
+export default async function getPostsService(userId?: string) {
   const posts = await prisma.post.findMany({
     include: {
       user: {
@@ -16,12 +16,32 @@ export default async function getPostsService() {
           cover: true,
         },
       },
+      _count: {
+        select: {
+          likes: { where: { liked: true } },
+        },
+      },
+      likes: userId
+        ? {
+            where: {
+              userId: userId,
+              liked: true,
+            },
+          }
+        : false,
     },
     orderBy: {
       createdAt: "desc",
     },
-    take: 20, // Limita a 20 resenhas para não sobrecarregar a home
+    take: 20,
   });
 
-  return posts;
+  return posts.map((post) => {
+    const { _count, likes, ...rest } = post;
+    return {
+      ...rest,
+      likesCount: _count.likes,
+      isLiked: likes ? likes.length > 0 : false,
+    };
+  });
 }

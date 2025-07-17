@@ -1,6 +1,9 @@
 import prisma from "../../database/db";
 
-export default async function getPostsByBookService(bookId: string) {
+export default async function getPostsByBookService(
+  bookId: string,
+  userId?: string
+) {
   const posts = await prisma.post.findMany({
     where: {
       bookId,
@@ -16,13 +19,34 @@ export default async function getPostsByBookService(bookId: string) {
       book: {
         select: {
           title: true,
+          cover: true,
         },
       },
+      _count: {
+        select: {
+          likes: { where: { liked: true } },
+        },
+      },
+      likes: userId
+        ? {
+            where: {
+              userId: userId,
+              liked: true,
+            },
+          }
+        : false,
     },
     orderBy: {
       createdAt: "desc",
     },
   });
 
-  return posts;
+  return posts.map((post) => {
+    const { _count, likes, ...rest } = post;
+    return {
+      ...rest,
+      likesCount: _count.likes,
+      isLiked: likes ? likes.length > 0 : false,
+    };
+  });
 }

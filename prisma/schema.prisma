@@ -67,7 +67,8 @@ model Book {
   RequestLending RequestLending[]
   Post           Post[]
   FavoritedBooks FavoritedBooks[]
-  collections    BooksOnCollections[]
+  Collection     Collection?      @relation(fields: [collectionId], references: [id])
+  collectionId   String?
 
   @@unique([title, author])
 }
@@ -212,21 +213,10 @@ model Collection {
 
   user User @relation(fields: [userId], references: [id])
 
-  books BooksOnCollections[]
+  books Book[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-}
-
-model BooksOnCollections {
-  book         Book       @relation(fields: [bookId], references: [id])
-  bookId       String
-  collection   Collection @relation(fields: [collectionId], references: [id])
-  collectionId String
-  assignedAt   DateTime   @default(now())
-  assignedBy   String // user id
-
-  @@id([bookId, collectionId])
 }
 
 model Assignment {

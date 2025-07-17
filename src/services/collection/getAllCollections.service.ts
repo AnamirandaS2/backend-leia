@@ -5,19 +5,20 @@ export default async function getAllCollectionsService(userId: string) {
     where: {
       userId,
     },
-    include: {
+    select: {
+      id: true,
+      name: true,
       books: {
-        // This is the relation to the join table BooksOnCollections
-        include: {
+        select: {
           book: {
-            // This is the relation from the join table to the Book model
             select: {
               id: true,
               cover: true,
+              title: true,
+              author: true,
             },
           },
         },
-        take: 4,
       },
     },
   });
@@ -26,9 +27,6 @@ export default async function getAllCollectionsService(userId: string) {
   return collections.map((collection) => ({
     id: collection.id,
     name: collection.name,
-    userId: collection.userId,
-    createdAt: collection.createdAt,
-    updatedAt: collection.updatedAt,
     books: collection.books.map((item) => item.book),
   }));
 }

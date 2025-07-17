@@ -11,9 +11,9 @@ export default async function getCollectionService(collectionId: string) {
           book: {
             select: {
               id: true,
+              cover: true,
               title: true,
               author: true,
-              cover: true,
             },
           },
         },
