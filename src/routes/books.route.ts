@@ -12,6 +12,7 @@ import {
   favoriteBook,
   unfavoriteBook,
   fetchFavorites,
+  getPhysicalBooks,
 } from "../controllers/book.controller";
 import checkBook from "../middlewares/book/checkBook";
 import checkFavorite from "../middlewares/book/isFavorite";
@@ -26,6 +27,7 @@ const router = Router();
 
 router.use(fileupload());
 
+router.get("/physical-copies", getPhysicalBooks);
 router.options("/update-reading-list/:id", cors());
 router.get("/", checkToken, queryBooks);
 router.get("/:id", checkBook, getBook);

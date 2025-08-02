@@ -1,11 +1,11 @@
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 
 import addBookService from "../services/book/addBook";
 import deleteService from "../services/book/delete.service";
 import favoriteBookService from "../services/book/favoriteBook.service";
 import fetchBooksService from "../services/book/fetchBooks.service";
 import fetchFavoritesService from "../services/book/fetchFavorites.service";
-import getBookService from "../services/book/getBook.service";
+import fetchPhysicalBooksService from "../services/book/fetchPhysicalBooks.service";
 import unfavoriteBookService from "../services/book/unfavoriteBook.service";
 import updateService from "../services/book/updateBook";
 import updateReadingsService from "../services/book/updateReadings.service";
@@ -40,6 +40,11 @@ export async function queryBooks(req: Request, res: Response) {
     userId,
   });
   return res.status(200).send(books);
+}
+
+export async function getPhysicalBooks(req: Request, res: Response) {
+  const books = await fetchPhysicalBooksService();
+  return res.status(200).json(books);
 }
 
 export async function addBook(req: Request, res: Response) {

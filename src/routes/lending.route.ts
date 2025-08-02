@@ -1,26 +1,86 @@
-import { Role } from '@prisma/client';
-import { Router } from 'express';
+import { Router } from "express";
 
-import { approveRequest, approveExtensionRequest, getPendencies, getPendenciesById, rejectRequest, rejectExtensionRequest, requestExtension, requestLending, returnBook, getClosestReturnDate } from '../controllers/lending.controller';
-import { checkBook, checkLendingFromUser, checkLendingExists, checkRequest } from '../middlewares/lending/';
-import checkExtensionRequest from '../middlewares/lending/checkExtensionRequest';
-import checkPermission from '../middlewares/user/checkPermission';
-import checkToken from '../middlewares/user/checkToken';
-import { lendingExtensionSchema, requestLendingSchema } from '../schemas/borrow.schema';
-import verifyShape from '../utils/verifyShape';
+import { checkBook } from "../middlewares/lending/checkBook";
+import { checkLendingExists } from "../middlewares/lending/checkLendingExists";
+import { checkLendingFromUser } from "../middlewares/lending/checkLendingFromUser";
+import checkRequest from "../middlewares/lending/checkRequest";
+import checkToken from "../middlewares/user/checkToken";
+import checkPermission from "../middlewares/user/checkPermission";
+import { lendBookSchema, requestLendingSchema } from "../schemas/borrow.schema";
+import verifyShape from "../utils/verifyShape";
+import {
+  approveExtensionRequest,
+  approveRequest,
+  getClosestReturnDate,
+  getPendencies,
+  getPendenciesById,
+  rejectExtensionRequest,
+  rejectRequest,
+  requestExtension,
+  requestLending,
+  returnBook,
+} from "../controllers/lending.controller";
 
 const router = Router();
-const isProfessorOrAdmin = checkPermission([Role.ADMIN, Role.PROFESSOR]);
 
-router.post('/request', verifyShape(requestLendingSchema), checkToken, checkBook, requestLending);
-router.post('/approve/:requestId', checkToken, isProfessorOrAdmin, checkRequest, approveRequest);
-router.post('/reject/:requestId', checkToken, isProfessorOrAdmin, checkRequest, rejectRequest);
-router.post('/extension/request', verifyShape(lendingExtensionSchema), checkToken, checkLendingFromUser, requestExtension);
-router.post('/extension/approve/:requestId', checkToken, isProfessorOrAdmin, checkExtensionRequest, approveExtensionRequest),
-router.post('/extension/reject/:requestId', checkToken, isProfessorOrAdmin, checkExtensionRequest, rejectExtensionRequest); 
-router.put('/return/:lendingId', checkToken, checkLendingExists, isProfessorOrAdmin, checkLendingExists, returnBook);
-router.get('/pendencies', checkToken, getPendenciesById);
-router.get('/pendencies/all', checkToken, isProfessorOrAdmin, getPendencies);
-router.get('/pendencies/closest', checkToken, getClosestReturnDate);
-  
+router.post(
+  "/request",
+  checkToken,
+  verifyShape(requestLendingSchema),
+  requestLending
+);
+
+router.get("/pendencies", checkToken, getPendencies);
+router.get(
+  "/pendencies/:id",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  getPendenciesById
+);
+
+router.post(
+  "/",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  verifyShape(lendBookSchema),
+  checkRequest,
+  approveRequest
+);
+
+router.post(
+  "/return",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  checkLendingExists,
+  returnBook
+);
+
+router.get("/closest", checkToken, getClosestReturnDate);
+
+router.patch(
+  "/request/reject/:id",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  checkRequest,
+  rejectRequest
+);
+
+router.post("/extend/:id", checkToken, checkLendingFromUser, requestExtension);
+
+router.patch(
+  "/extend/reject/:id",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  checkRequest,
+  rejectExtensionRequest
+);
+
+router.patch(
+  "/extend/:id/approve",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  checkRequest,
+  approveExtensionRequest
+);
+
 export default router;

@@ -1,12 +1,16 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
-import prisma from '../../database/db';
+import prisma from "../../database/db";
 
-export async function checkRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+export default async function checkRequest(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { requestId } = req.params;
 
   if (!requestId) {
-    res.status(400).json({ message: 'Request ID is required' });
+    res.status(400).json({ message: "Request ID is required" });
     return;
   }
 
@@ -17,7 +21,7 @@ export async function checkRequest(req: Request, res: Response, next: NextFuncti
   });
 
   if (!request) {
-    res.status(404).json({ message: 'Request not found' });
+    res.status(404).json({ message: "Request not found" });
     return;
   }
 

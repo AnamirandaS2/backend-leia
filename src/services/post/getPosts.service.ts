@@ -25,7 +25,6 @@ export default async function getPostsService(userId?: string) {
         ? {
             where: {
               userId: userId,
-              liked: true,
             },
           }
         : false,
@@ -38,10 +37,11 @@ export default async function getPostsService(userId?: string) {
 
   return posts.map((post) => {
     const { _count, likes, ...rest } = post;
+    const isLiked = likes && likes.length > 0 ? likes[0].liked : false;
     return {
       ...rest,
       likesCount: _count.likes,
-      isLiked: likes ? likes.length > 0 : false,
+      isLiked,
     };
   });
 }

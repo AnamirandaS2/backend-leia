@@ -17,10 +17,10 @@ import { likePostSchema } from "../schemas/posts.schema";
 
 const router = Router();
 
-router.get("/", getPosts);
+router.get("/", checkToken, getPosts);
 router.post("/", checkToken, createPost);
-router.get("/book/:bookId", getPostsByBook);
-router.get("/user/:userId", getPostsByUser);
+router.get("/book/:bookId", checkToken, getPostsByBook);
+router.get("/user/:userId", checkToken, getPostsByUser);
 router.post(
   "/:id/like",
   checkToken,

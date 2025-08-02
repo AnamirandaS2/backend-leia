@@ -31,7 +31,6 @@ export default async function getPostsByBookService(
         ? {
             where: {
               userId: userId,
-              liked: true,
             },
           }
         : false,
@@ -43,10 +42,11 @@ export default async function getPostsByBookService(
 
   return posts.map((post) => {
     const { _count, likes, ...rest } = post;
+    const isLiked = likes && likes.length > 0 ? likes[0].liked : false;
     return {
       ...rest,
       likesCount: _count.likes,
-      isLiked: likes ? likes.length > 0 : false,
+      isLiked,
     };
   });
 }
