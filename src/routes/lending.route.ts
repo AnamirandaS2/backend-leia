@@ -14,6 +14,7 @@ import {
   getClosestReturnDate,
   getPendencies,
   getPendenciesById,
+  getUserLendings,
   rejectExtensionRequest,
   rejectRequest,
   requestExtension,
@@ -29,6 +30,8 @@ router.post(
   verifyShape(requestLendingSchema),
   requestLending
 );
+
+router.get("/user", checkToken, getUserLendings);
 
 router.get("/pendencies", checkToken, getPendencies);
 router.get(

@@ -4,6 +4,7 @@ import approveLendingExtensionService from "../services/lending/extendLending.se
 import getClosestReturnDateService from "../services/lending/getClosestReturn.service";
 import getNonReturnedBooksService from "../services/lending/getNonReturned.service";
 import getPendenciesByIdService from "../services/lending/getPendenciesById.service";
+import getUserLendingsService from "../services/lending/getUserLendings.service";
 import lendBookService from "../services/lending/lendBook.service";
 import rejectExtensionService from "../services/lending/rejectExtension.service";
 import rejectRequestService from "../services/lending/rejectRequest.service";
@@ -109,4 +110,15 @@ export async function getClosestReturnDate(req: Request, res: Response) {
   const closest = await getClosestReturnDateService(id!);
 
   return res.status(200).json(closest);
+}
+
+export async function getUserLendings(req: Request, res: Response) {
+  const { id: userId } = req.user;
+
+  try {
+    const lendings = await getUserLendingsService(userId!);
+    return res.status(200).json(lendings);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
 }
