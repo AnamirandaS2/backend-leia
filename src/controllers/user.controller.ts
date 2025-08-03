@@ -6,6 +6,7 @@ import prisma from "../database/db";
 import { registerSchema } from "../schemas/admin.schema";
 import forgotPasswordService from "../services/user/forgotPassword.service";
 import generateToken from "../services/user/generateToken.service";
+import getCurrentUserService from "../services/user/getCurrentUser.service";
 import registerService from "../services/user/register.service";
 import resetPasswordService from "../services/user/resetPassword.service";
 import storeAvatar from "../services/user/storeAvatar.service";
@@ -107,5 +108,16 @@ export async function validateToken(req: Request, res: Response) {
     return res.status(200).send(!!user);
   } catch (err) {
     return res.status(401).send(false);
+  }
+}
+
+export async function getCurrentUserController(req: Request, res: Response) {
+  const { id: userId } = req.user as { id: string };
+
+  try {
+    const user = await getCurrentUserService(userId);
+    return res.status(200).json(user);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
   }
 }
