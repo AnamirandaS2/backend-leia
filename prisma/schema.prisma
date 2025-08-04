@@ -38,6 +38,8 @@ model User {
   AssignmentLikes   AssignmentLikes[]
   PostComment       PostComment[]
   AssignmentComment AssignmentComment[]
+  Turma             Turma[]
+  TurmaAluno        TurmaAluno[]
 }
 
 model Book {
@@ -245,15 +247,38 @@ model AssignmentLikes {
 }
 
 model AssignmentComment {
-  id           String @id @default(uuid())
-  assignmentId String
+  id           String     @id @default(uuid())
   userId       String
+  assignmentId String
   content      String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  deletedAt    DateTime?
 
   user       User       @relation(fields: [userId], references: [id])
   assignment Assignment @relation(fields: [assignmentId], references: [id])
+}
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
+model Turma {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  professorId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+
+  professor User        @relation(fields: [professorId], references: [id])
+  alunos    TurmaAluno[]
+}
+
+model TurmaAluno {
+  id       String @id @default(uuid())
+  turmaId  String
+  userId   String
+  createdAt DateTime @default(now())
+
+  turma Turma @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([turmaId, userId])
 }

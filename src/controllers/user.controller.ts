@@ -69,7 +69,8 @@ export async function resetPasswordController(req: Request, res: Response) {
 export async function updateController(req: Request, res: Response) {
   const { name, password } = req.body;
   const avatar = (req.files as any)?.avatar;
-  const { id, avatar: hasAvatar } = req.user;
+  const { id } = req.user as { id: string; avatar?: string };
+  const hasAvatar = (req.user as any)?.avatar;
 
   let avatarUrl = hasAvatar;
 
@@ -99,7 +100,6 @@ export async function validateToken(req: Request, res: Response) {
   if (!token) return res.status(401).send(false);
 
   let userId = "";
-  req.user = {};
 
   try {
     userId = (verify(token, process.env.JWT_SECRET as string) as { id: string })

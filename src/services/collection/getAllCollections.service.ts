@@ -10,14 +10,10 @@ export default async function getAllCollectionsService(userId: string) {
       name: true,
       books: {
         select: {
-          book: {
-            select: {
-              id: true,
-              cover: true,
-              title: true,
-              author: true,
-            },
-          },
+          id: true,
+          cover: true,
+          title: true,
+          author: true,
         },
       },
     },
@@ -27,6 +23,6 @@ export default async function getAllCollectionsService(userId: string) {
   return collections.map((collection) => ({
     id: collection.id,
     name: collection.name,
-    books: collection.books.map((item) => item.book),
+    books: collection.books,
   }));
 }

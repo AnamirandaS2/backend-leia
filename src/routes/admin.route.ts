@@ -1,27 +1,69 @@
-import { Router } from 'express';
+import { Router } from "express";
+import checkPermission from "../middlewares/user/checkPermission";
+import checkToken from "../middlewares/user/checkToken";
+import {
+  fetchAllUsers,
+  fetchApprovedUsers,
+  fetchNonApprovedUsers,
+  fetchRejectedUsers,
+  approveUser,
+  approveUserAndAddToTurma,
+  rejectUser,
+  fetchUser,
+  getAdminEmails,
+  approveReview,
+} from "../controllers/admin.controller";
 
-import { approveUser, fetchAllUsers, fetchNonApprovedUsers, fetchUsers, getUser, rejectUser } from '../controllers/admin.controller';
-import { registerController } from '../controllers/user.controller';
-import checkReviewExists from '../middlewares/review/checkReviewExists';
-import checkEmailAvailability from '../middlewares/user/checkEmailAvailability';
-import checkParamsId from '../middlewares/user/checkParamsId';
-import checkPermission from '../middlewares/user/checkPermission';
-import checkToken from '../middlewares/user/checkToken';
-import { registerSchema } from '../schemas/admin.schema';
-import verifyShape from '../utils/verifyShape';
+const admin = Router();
 
-const router = Router();
+const checkIsProfessorOrAdmin = checkPermission(["PROFESSOR", "ADMIN"]);
 
-const checkIsAdmin = checkPermission(['ADMIN']);
-const checkIsProfessorOrAdmin = checkPermission(['PROFESSOR', 'ADMIN']);
+// Rotas para gerenciamento de usuários
+admin.get("/users", checkToken, checkIsProfessorOrAdmin, fetchAllUsers);
+admin.get(
+  "/users/approved",
+  checkToken,
+  checkIsProfessorOrAdmin,
+  fetchApprovedUsers
+);
+admin.get(
+  "/users/pending",
+  checkToken,
+  checkIsProfessorOrAdmin,
+  fetchNonApprovedUsers
+);
+admin.get(
+  "/users/rejected",
+  checkToken,
+  checkIsProfessorOrAdmin,
+  fetchRejectedUsers
+);
 
-router.post('/register', verifyShape(registerSchema), checkToken, checkIsAdmin, checkEmailAvailability, registerController);
-router.get('/non-approved-users', checkToken, checkIsProfessorOrAdmin, fetchNonApprovedUsers);
-router.post('/approve-review/:id', checkToken, checkIsProfessorOrAdmin, checkReviewExists);
-router.post('/approve-user/:id', checkToken, checkIsProfessorOrAdmin, checkParamsId, approveUser);
-router.post('/reject-user/:id', checkToken, checkIsProfessorOrAdmin, checkParamsId, rejectUser);
-router.get('/approved-users', checkToken, checkIsProfessorOrAdmin, fetchUsers);
-router.get('/user/:reviewId', checkToken, checkIsProfessorOrAdmin, checkReviewExists, getUser);
-router.get('/all-users', checkToken, checkIsProfessorOrAdmin, fetchAllUsers);
+admin.post(
+  "/approve-user/:id",
+  checkToken,
+  checkIsProfessorOrAdmin,
+  approveUser
+);
 
-export default router;
+admin.post(
+  "/approve-user-and-add-to-turma",
+  checkToken,
+  checkIsProfessorOrAdmin,
+  approveUserAndAddToTurma
+);
+
+admin.post("/reject-user/:id", checkToken, checkIsProfessorOrAdmin, rejectUser);
+
+admin.get("/user/:id", checkToken, checkIsProfessorOrAdmin, fetchUser);
+admin.get("/admin-emails", checkToken, checkIsProfessorOrAdmin, getAdminEmails);
+
+// Rotas para gerenciamento de reviews
+admin.post(
+  "/approve-review/:id",
+  checkToken,
+  checkIsProfessorOrAdmin,
+  approveReview
+);
+
+export default admin;
