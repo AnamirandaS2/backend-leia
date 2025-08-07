@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import addBookService from "../services/book/addBook";
+import addPhysicalBookService from "../services/book/addPhysicalBook.service";
 import deleteService from "../services/book/delete.service";
 import favoriteBookService from "../services/book/favoriteBook.service";
 import fetchBooksService from "../services/book/fetchBooks.service";
@@ -73,6 +74,18 @@ export async function addBook(req: Request, res: Response) {
     physicalCopyQuantity,
     file_book: file,
     cover_file: cover,
+  });
+
+  return res.status(201).json(response);
+}
+
+export async function addPhysicalBook(req: Request, res: Response) {
+  const { title, author, cover } = req.body;
+
+  const response = await addPhysicalBookService({
+    title,
+    author,
+    cover,
   });
 
   return res.status(201).json(response);

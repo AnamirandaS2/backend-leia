@@ -4,6 +4,7 @@ import fileupload from "express-fileupload";
 
 import {
   addBook,
+  addPhysicalBook,
   deleteBook,
   queryBooks,
   updateBook,
@@ -28,6 +29,7 @@ const router = Router();
 router.use(fileupload());
 
 router.get("/physical-copies", getPhysicalBooks);
+router.post("/physical", checkToken, isAdmin, addPhysicalBook);
 router.options("/update-reading-list/:id", cors());
 router.get("/", checkToken, queryBooks);
 router.get("/:id", checkBook, getBook);

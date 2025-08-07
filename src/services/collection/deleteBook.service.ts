@@ -4,12 +4,13 @@ export default async function deleteBookService(
   collectionId: string,
   bookId: string
 ) {
-  await prisma.booksOnCollections.delete({
+  // Remover a associação do livro com a coleção
+  await prisma.book.update({
     where: {
-      bookId_collectionId: {
-        bookId,
-        collectionId,
-      },
+      id: bookId,
+    },
+    data: {
+      collectionId: null,
     },
   });
 }

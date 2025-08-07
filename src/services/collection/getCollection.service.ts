@@ -8,14 +8,10 @@ export default async function getCollectionService(collectionId: string) {
     include: {
       books: {
         select: {
-          book: {
-            select: {
-              id: true,
-              cover: true,
-              title: true,
-              author: true,
-            },
-          },
+          id: true,
+          cover: true,
+          title: true,
+          author: true,
         },
       },
     },
@@ -25,8 +21,5 @@ export default async function getCollectionService(collectionId: string) {
     return null;
   }
 
-  return {
-    ...collection,
-    books: collection.books.map((b) => b.book),
-  };
+  return collection;
 }
