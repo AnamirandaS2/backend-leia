@@ -11,9 +11,10 @@ interface Props {
   borrowDate: string;
   returnDate: string;  
   userId: string;
+  visibility?: 'PUBLIC' | 'PROFESSOR_ONLY';
 }
 
-export default async function createReviewService({ bookId, borrowDate, returnDate, userId }: Props) {
+export default async function createReviewService({ bookId, borrowDate, returnDate, userId, visibility }: Props) {
   const reviewId = uuidv4();
   const tempFilename = `./${parseFilename('', reviewId)}`;
 
@@ -45,6 +46,7 @@ export default async function createReviewService({ bookId, borrowDate, returnDa
     returnDate,
     bookId,
     userId,
+    visibility: visibility || 'PUBLIC',
   }});
     
   return { ...review, userId: undefined };

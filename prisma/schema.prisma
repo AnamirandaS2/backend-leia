@@ -14,6 +14,11 @@ enum Role {
   ADMIN
 }
 
+enum ReviewVisibility {
+  PUBLIC
+  PROFESSOR_ONLY
+}
+
 model User {
   id       String  @id @default(uuid())
   name     String
@@ -83,6 +88,8 @@ model Review {
   title      String
   borrowDate DateTime
   returnDate DateTime
+
+  visibility ReviewVisibility @default(PUBLIC)
 
   approved Boolean @default(false)
   finished Boolean @default(false)
@@ -162,6 +169,8 @@ model Post {
   rating          Int
   readingProgress Int
 
+  visibility PostVisibility @default(PUBLIC)
+
   user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   book  Book        @relation(fields: [bookId], references: [id], onDelete: Cascade)
   likes PostLikes[]
@@ -171,6 +180,11 @@ model Post {
   deletedAt DateTime?
 
   PostComment PostComment[]
+}
+
+enum PostVisibility {
+  PUBLIC
+  PROFESSOR_ONLY
 }
 
 model PostLikes {

@@ -2,11 +2,21 @@ import prisma from "../../database/db";
 
 export default async function getPostsByBookService(
   bookId: string,
-  userId?: string
+  requesterId?: string,
+  requesterRole?: "USER" | "PROFESSOR" | "ADMIN"
 ) {
+  const whereVisibility: any = {};
+  if (requesterRole === "PROFESSOR" || requesterRole === "ADMIN") {
+    // Professor/Admin vê tudo, não aplica filtro de visibilidade.
+  } else {
+    // Usuários normais (ou não logados) veem apenas resenhas públicas.
+    whereVisibility.visibility = "PUBLIC";
+  }
+
   const posts = await prisma.post.findMany({
     where: {
       bookId,
+      ...whereVisibility,
     },
     include: {
       user: {
@@ -27,10 +37,10 @@ export default async function getPostsByBookService(
           likes: { where: { liked: true } },
         },
       },
-      likes: userId
+      likes: requesterId
         ? {
             where: {
-              userId: userId,
+              userId: requesterId,
             },
           }
         : false,

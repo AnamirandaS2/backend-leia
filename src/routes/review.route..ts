@@ -13,7 +13,7 @@ import verifyShape from '../utils/verifyShape';
 
 const router = Router();
 
-router.get('/reviews?:bookTitle?:reviewTitle?:bookAuthor?:userName?:from?:to?:userId', checkToken, queryingOwnReviews, queryReviews);
+router.get('/reviews?:bookTitle?:reviewTitle?:bookAuthor?:userName?:from?:to?:userId?:bookId', checkToken, queryingOwnReviews, queryReviews);
 router.put('/:reviewId', verifyShape(updateReviewSchema), checkToken, checkReviewIsFromUser, updateReview);
 router.get('/:id', checkReviewExists, fetchReview);
 router.post('', verifyShape(createReviewSchema), checkToken, checkBook, checkCreationAvailable, createReview);

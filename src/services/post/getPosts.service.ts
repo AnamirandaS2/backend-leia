@@ -1,7 +1,19 @@
 import prisma from "../../database/db";
 
-export default async function getPostsService(userId?: string) {
+export default async function getPostsService(
+  requesterId?: string,
+  requesterRole?: "USER" | "PROFESSOR" | "ADMIN"
+) {
+  const whereVisibility: any = {};
+  if (requesterRole === "PROFESSOR" || requesterRole === "ADMIN") {
+    // Professor/Admin vê tudo
+  } else {
+    // Usuários normais veem apenas resenhas públicas
+    whereVisibility.visibility = "PUBLIC";
+  }
+
   const posts = await prisma.post.findMany({
+    where: whereVisibility,
     include: {
       user: {
         select: {
@@ -21,10 +33,10 @@ export default async function getPostsService(userId?: string) {
           likes: { where: { liked: true } },
         },
       },
-      likes: userId
+      likes: requesterId
         ? {
             where: {
-              userId: userId,
+              userId: requesterId,
             },
           }
         : false,

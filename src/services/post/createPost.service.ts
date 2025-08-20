@@ -6,6 +6,7 @@ interface CreatePostData {
   bookId: string;
   content: string;
   rating: number;
+  visibility?: "PUBLIC" | "PROFESSOR_ONLY";
 }
 
 export default async function createPostService({
@@ -13,6 +14,7 @@ export default async function createPostService({
   bookId,
   content,
   rating,
+  visibility,
 }: CreatePostData) {
   const book = await prisma.book.findUnique({
     where: { id: bookId },
@@ -33,6 +35,7 @@ export default async function createPostService({
       bookId,
       content,
       rating,
+      visibility: visibility || "PUBLIC",
       readingProgress: readingProgress
         ? Math.round((readingProgress.page / book.pages) * 100)
         : 0,

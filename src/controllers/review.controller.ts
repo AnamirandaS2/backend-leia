@@ -16,11 +16,11 @@ export async function fetchReview(req: Request, res: Response) {
 }
 
 export async function createReview(req: Request, res: Response) {
-  const { bookId, borrowDate, returnDate } = req.body;
+  const { bookId, borrowDate, returnDate, visibility } = req.body as { bookId: string; borrowDate: string; returnDate: string; visibility?: 'PUBLIC' | 'PROFESSOR_ONLY' };
 
   const { id: userId } = req.user as { id: string };
 
-  const review = await createReviewService({ bookId, userId, borrowDate, returnDate });
+  const review = await createReviewService({ bookId, userId, borrowDate, returnDate, visibility });
 
   return res.status(201).json(review);
 }
@@ -53,8 +53,14 @@ interface Queries {
 }
 
 export async function queryReviews(req: Request, res: Response) {
-  const queries = req.query as unknown as Queries;
-  const reviews = await queryReviewsService(queries);
+  const queries = req.query as unknown as Queries & { bookId?: string };
+  const { role, id } = req.user as { role: 'USER' | 'PROFESSOR' | 'ADMIN'; id: string };
+  const reviews = await queryReviewsService({
+    ...queries,
+    bookId: (req.query as any).bookId,
+    requesterRole: role,
+    requesterId: id,
+  });
 
   return res.status(200).json(reviews); 
 }

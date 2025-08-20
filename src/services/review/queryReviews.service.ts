@@ -8,6 +8,9 @@ interface Props {
     from?: string;
     to?: string;
     userId?: string;
+    bookId?: string;
+    requesterRole?: 'USER' | 'PROFESSOR' | 'ADMIN';
+    requesterId?: string;
 }
 
 export default async function queryReviewsService({ 
@@ -18,11 +21,25 @@ export default async function queryReviewsService({
   from, 
   to,
   userId,
+  bookId,
+  requesterRole,
+  requesterId,
 }: Props) {
   let startDate = new Date(from || '1970-01-01');
   if (isNaN(startDate.getTime())) startDate = new Date('1970-01-01');
   let endDate = new Date(to || '2100-01-01');
   if (isNaN(endDate.getTime())) endDate = new Date('2100-01-01');
+
+  const whereVisibility: any = {};
+  if (requesterRole === 'PROFESSOR' || requesterRole === 'ADMIN') {
+    // professor/admin vê tudo
+  } else {
+    // usuário comum só vê públicas dos outros e as próprias
+    whereVisibility.OR = [
+      { visibility: 'PUBLIC' },
+      { userId: requesterId },
+    ];
+  }
 
   const reviews = await prisma.review.findMany({ 
     where: {
@@ -51,6 +68,8 @@ export default async function queryReviewsService({
         gte: startDate,
         lte: endDate,
       },
+      bookId: bookId,
+      ...whereVisibility,
     },
     include: {
       book: {

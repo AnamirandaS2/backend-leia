@@ -5,10 +5,17 @@ export default async function getPostsByUserService(
   bookId?: string,
   requesterId?: string
 ) {
+  // Se não for o próprio autor, só vê públicos
+  const whereVisibility =
+    requesterId && requesterId !== userId
+      ? { visibility: "PUBLIC" as const }
+      : {}; // Se for o próprio autor, vê tudo (não filtra por visibilidade)
+
   const posts = await prisma.post.findMany({
     where: {
       userId,
       bookId,
+      ...whereVisibility,
     },
     include: {
       user: {

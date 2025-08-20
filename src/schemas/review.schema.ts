@@ -5,6 +5,9 @@ export const createReviewSchema = yup.object().shape({
   bookId: yup.string().required(),
   borrowDate: yup.string().required(),
   returnDate: yup.string().required(),
+  visibility: yup.mixed<'PUBLIC' | 'PROFESSOR_ONLY'>()
+    .oneOf(['PUBLIC', 'PROFESSOR_ONLY'])
+    .default('PUBLIC')
 });
 
 export const updateReviewSchema = yup.object().shape({
