@@ -11,6 +11,8 @@ import rejectRequestService from "../services/lending/rejectRequest.service";
 import requestExtensionService from "../services/lending/requestExtension.service";
 import requestLendingService from "../services/lending/requestLending.service";
 import returnBookService from "../services/lending/returnBook.service";
+import registerLendingService from "../services/lending/registerLending.service";
+import getProfessorLendingsService from "../services/lending/getProfessorLendings.service";
 
 export async function requestLending(req: Request, res: Response) {
   const { id: userId } = req.user;
@@ -82,12 +84,30 @@ export async function rejectExtensionRequest(req: Request, res: Response) {
 
 export async function returnBook(req: Request, res: Response) {
   const { lendingId } = req.params;
+  const { id: professorId } = req.user;
 
-  await returnBookService(lendingId);
+  try {
+    await returnBookService(lendingId, professorId!);
+    return res.status(200).json({
+      message: "Livro devolvido com sucesso",
+    });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+}
 
-  return res.status(200).json({
-    message: "Livro devolvido com sucesso",
-  });
+export async function registerLending(req: Request, res: Response) {
+  const { bookId, studentId, lendingDuration, returnDate } = req.body;
+  const { id: professorId } = req.user;
+
+  try {
+    await registerLendingService(bookId, studentId, returnDate, professorId!);
+    return res.status(201).json({
+      message: "Empréstimo registrado com sucesso",
+    });
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
 }
 
 export async function getPendenciesById(req: Request, res: Response) {
@@ -117,6 +137,17 @@ export async function getUserLendings(req: Request, res: Response) {
 
   try {
     const lendings = await getUserLendingsService(userId!);
+    return res.status(200).json(lendings);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+
+export async function getProfessorLendings(req: Request, res: Response) {
+  const { id: professorId } = req.user;
+
+  try {
+    const lendings = await getProfessorLendingsService(professorId);
     return res.status(200).json(lendings);
   } catch (error: any) {
     return res.status(400).json({ message: error.message });

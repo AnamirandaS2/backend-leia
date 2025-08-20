@@ -15,11 +15,13 @@ import {
   getPendencies,
   getPendenciesById,
   getUserLendings,
+  getProfessorLendings,
   rejectExtensionRequest,
   rejectRequest,
   requestExtension,
   requestLending,
   returnBook,
+  registerLending,
 } from "../controllers/lending.controller";
 
 const router = Router();
@@ -32,6 +34,12 @@ router.post(
 );
 
 router.get("/user", checkToken, getUserLendings);
+router.get(
+  "/professor",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  getProfessorLendings
+);
 
 router.get("/pendencies", checkToken, getPendencies);
 router.get(
@@ -55,6 +63,20 @@ router.post(
   checkToken,
   checkPermission(["ADMIN", "PROFESSOR"]),
   checkLendingExists,
+  returnBook
+);
+
+router.post(
+  "/register",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
+  registerLending
+);
+
+router.post(
+  "/:lendingId/return",
+  checkToken,
+  checkPermission(["ADMIN", "PROFESSOR"]),
   returnBook
 );
 

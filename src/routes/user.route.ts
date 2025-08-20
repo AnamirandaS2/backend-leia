@@ -9,6 +9,7 @@ import {
   resetPasswordController,
   updateController,
   validateToken,
+  getApprovedStudentsController,
 } from "../controllers/user.controller";
 import checkEmailAvailability from "../middlewares/user/checkEmailAvailability";
 import checkEmailExistence from "../middlewares/user/checkEmailExistence";
@@ -52,5 +53,7 @@ useRouter.post(
 
 useRouter.put("", checkAtLeastOneFieldUpdate, checkToken, updateController);
 useRouter.get("/validate-token", validateToken);
+
+useRouter.get("/approved-students", checkToken, getApprovedStudentsController);
 
 export default useRouter;

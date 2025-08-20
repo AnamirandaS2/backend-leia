@@ -13,6 +13,7 @@ import storeAvatar from "../services/user/storeAvatar.service";
 import updateService from "../services/user/update.service";
 import { v4 } from "uuid";
 import deleteAvatar from "../services/user/deleteAvatar.service";
+import getApprovedStudentsService from "../services/user/getApprovedStudents.service";
 
 export async function registerController(req: Request, res: Response) {
   const { name, email, password, role } = req.body as yup.InferType<
@@ -117,6 +118,18 @@ export async function getCurrentUserController(req: Request, res: Response) {
   try {
     const user = await getCurrentUserService(userId);
     return res.status(200).json(user);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+
+export async function getApprovedStudentsController(
+  req: Request,
+  res: Response
+) {
+  try {
+    const students = await getApprovedStudentsService();
+    return res.status(200).json(students);
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
