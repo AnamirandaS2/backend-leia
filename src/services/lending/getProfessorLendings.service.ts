@@ -1,7 +1,7 @@
-import { prisma } from "../../database/db";
+import prisma from "../../database/db";
 
 export default async function getProfessorLendingsService(professorId: string) {
-  const lendings = await prisma.lending.findMany({
+  const lendings = await prisma.borrowedBook.findMany({
     where: {
       professorId: professorId,
     },

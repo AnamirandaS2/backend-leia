@@ -18,7 +18,7 @@ export default async function checkParamsToken(
       token,
       process.env.JWT_SECRET as string
     ) as unknown as { id: string };
-    req.user = { id };
+    req.user = { id, name: "", email: "", role: "USER" as const };
   } catch (err) {
     if (err instanceof TokenExpiredError) {
       throw new AppError("Token expirado", 401);

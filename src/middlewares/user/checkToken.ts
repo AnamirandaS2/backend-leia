@@ -37,13 +37,10 @@ export default async function checkToken(
 
   req.user = {
     id: userId,
-    avatar: user.avatar!,
-    email: user.email,
     name: user.name,
+    email: user.email,
     role: user.role,
   };
-
-  req.query.userName = user.name;
 
   return next();
 }

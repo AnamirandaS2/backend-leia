@@ -26,6 +26,7 @@ export default async function getPostsService(
         select: {
           title: true,
           cover: true,
+          description: true,
         },
       },
       _count: {

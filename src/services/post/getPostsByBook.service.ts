@@ -30,6 +30,7 @@ export default async function getPostsByBookService(
         select: {
           title: true,
           cover: true,
+          description: true,
         },
       },
       _count: {

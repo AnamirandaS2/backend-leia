@@ -94,7 +94,8 @@ export async function addPhysicalBook(req: Request, res: Response) {
 export async function updateReadings(req: Request, res: Response) {
   const { id: bookId } = req.book;
   const { id: userId } = req.user;
-  await updateReadingsService(bookId, userId);
+  const { page } = req.body;
+  await updateReadingsService(userId, bookId, page || 0);
   return res.status(204).send();
 }
 

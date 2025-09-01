@@ -1,15 +1,32 @@
-import prisma from '../../database/db';
+import prisma from "../../database/db";
 
-export default async function updateReadingsService(bookId, userId) {
-  prisma.readingTracking.update({
-    data: {
-      lastRead: new Date()
-    },
+export default async function updateReadingsService(
+  userId: string,
+  bookId: string,
+  page: number
+) {
+  const existingReading = await prisma.readingTracking.findFirst({
     where: {
-      userId_bookId: {
-        bookId,
-        userId,
-      }
-    }
+      userId,
+      bookId,
+    },
   });
+
+  if (existingReading) {
+    await prisma.readingTracking.update({
+      where: { id: existingReading.id },
+      data: {
+        page,
+        updatedAt: new Date(),
+      },
+    });
+  } else {
+    await prisma.readingTracking.create({
+      data: {
+        userId,
+        bookId,
+        page,
+      },
+    });
+  }
 }

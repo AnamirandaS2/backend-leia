@@ -9,9 +9,17 @@ declare global {
         name: string;
         email: string;
         role: "USER" | "PROFESSOR" | "ADMIN";
+        approved?: boolean;
+        avatar?: string;
       };
       book: Book;
       reading: ReadingTracking;
+      readingTracking: ReadingTracking;
+      review: {
+        id: string;
+        title: string;
+        [key: string]: any;
+      };
     }
   }
 }

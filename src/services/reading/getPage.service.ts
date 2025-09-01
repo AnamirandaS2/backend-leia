@@ -1,17 +1,12 @@
-import prisma from '../../database/db';
+import prisma from "../../database/db";
 
-export default async function getPageService(bookId: string, userId: string) {
-  const reading = await prisma.readingTracking.findUnique({
+export default async function getPageService(userId: string, bookId: string) {
+  const reading = await prisma.readingTracking.findFirst({
     where: {
-      userId_bookId: {
-        bookId,
-        userId,
-      },
+      userId,
+      bookId,
     },
-    select: {
-      page: true
-    }
   });
 
-  return reading
+  return reading?.page || 0;
 }

@@ -5,18 +5,29 @@ export default async function fetchAllAssignmentsService() {
     where: {
       deletedAt: null,
     },
-    select: {
-      id: true,
-      content: true,
-      createdAt: true,
-      likes: true,
+    include: {
       professor: {
         select: {
           id: true,
           name: true,
           avatar: true,
-        }
-      }
+        },
+      },
+      likes: true,
+      comments: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
     },
   });
 }

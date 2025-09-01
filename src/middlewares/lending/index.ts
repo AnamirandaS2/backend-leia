@@ -1,4 +1,4 @@
-export { checkBook } from './checkBook';
-export { checkLendingFromUser } from './checkLendingFromUser';
-export { checkLendingExists } from './checkLendingExists';
-export { checkRequest } from './checkRequest';
+export { checkBook } from "./checkBook";
+export { checkLendingFromUser } from "./checkLendingFromUser";
+export { checkLendingExists } from "./checkLendingExists";
+export { default as checkRequest } from "./checkRequest";

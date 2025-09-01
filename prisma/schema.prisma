@@ -5,7 +5,248 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                String              @id @default(uuid())
+  name              String
+  email             String              @unique
+  password          String
+  avatar            String?
+  approved          Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now())
+  role              Role                @default(USER)
+  Assignment        Assignment[]
+  AssignmentComment AssignmentComment[]
+  AssignmentLikes   AssignmentLikes[]
+  borrowed          BorrowedBook[]
+  Collection        Collection[]
+  FavoritedBooks    FavoritedBooks[]
+  Post              Post[]
+  PostComment       PostComment[]
+  PostLikes         PostLikes[]
+  reading           ReadingTracking[]
+  RequestLending    RequestLending[]
+  reviews           Review[]
+  Turma             Turma[]
+  TurmaAluno        TurmaAluno[]
+  registeredLendings BorrowedBook[] @relation("ProfessorLendings")
+}
+
+model Book {
+  id                   String            @id @default(uuid())
+  title                String            @unique
+  description          String
+  author               String
+  source               String
+  cover                String
+  genre                String
+  pages                Int
+  enabled              Boolean           @default(true)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @default(now())
+  sentAt               DateTime?
+  fileUrl              String
+  edition              Int?
+  volume               Int?
+  hasPhysicalCopy      Boolean           @default(false)
+  physicalCopyQuantity Int?
+  collectionId         String?
+  Collection           Collection?       @relation(fields: [collectionId], references: [id])
+  borrowed             BorrowedBook[]
+  FavoritedBooks       FavoritedBooks[]
+  Post                 Post[]
+  reading              ReadingTracking[]
+  RequestLending       RequestLending[]
+  reviews              Review[]
+
+  @@unique([title, author])
+}
+
+model Review {
+  id         String           @id @default(uuid())
+  userId     String
+  bookId     String
+  title      String
+  borrowDate DateTime
+  returnDate DateTime
+  approved   Boolean          @default(false)
+  finished   Boolean          @default(false)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @default(now())
+  visibility ReviewVisibility @default(PUBLIC)
+  book       Book             @relation(fields: [bookId], references: [id])
+  user       User             @relation(fields: [userId], references: [id])
+}
+
+model ReadingTracking {
+  userId    String
+  bookId    String
+  page      Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deadline  DateTime?
+  finished  Boolean   @default(false)
+  id        String    @id @default(uuid())
+  startedAt DateTime  @default(now())
+  book      Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model BorrowedBook {
+  id                String             @id @default(uuid())
+  userId            String
+  bookId            String
+  professorId       String?            // ID do professor que registrou o empréstimo
+  borrowDate        DateTime
+  returnDate        DateTime
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now())
+  returned          Boolean            @default(false)
+  book              Book               @relation(fields: [bookId], references: [id])
+  user              User               @relation(fields: [userId], references: [id])
+  professor         User?              @relation("ProfessorLendings", fields: [professorId], references: [id])
+  extensionRequests RequestExtension[]
+
+  @@unique([userId, bookId, borrowDate])
+}
+
+model RequestLending {
+  id              String    @id @default(uuid())
+  userId          String
+  bookId          String
+  requestAt       DateTime
+  lendingDuration Int
+  approved        Boolean   @default(false)
+  approvedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  book            Book      @relation(fields: [bookId], references: [id])
+  user            User      @relation(fields: [userId], references: [id])
+}
+
+model RequestExtension {
+  id        String       @id @default(uuid())
+  lendingId String
+  extraTime Int
+  approved  Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  lending   BorrowedBook @relation(fields: [lendingId], references: [id])
+}
+
+model Post {
+  id              String         @id @default(uuid())
+  content         String
+  userId          String
+  bookId          String
+  rating          Int
+  readingProgress Int
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @default(now())
+  deletedAt       DateTime?
+  visibility      PostVisibility @default(PUBLIC)
+  book            Book           @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  PostComment     PostComment[]
+  likes           PostLikes[]
+}
+
+model PostLikes {
+  userId String
+  postId String
+  liked  Boolean @default(false)
+  post   Post    @relation(fields: [postId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@id([userId, postId])
+}
+
+model PostComment {
+  id        String    @id @default(uuid())
+  postId    String
+  userId    String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+  post      Post      @relation(fields: [postId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model FavoritedBooks {
+  userId String
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([userId, bookId])
+}
+
+model Collection {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  books     Book[]
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Assignment {
+  id          String              @id @default(uuid())
+  content     String
+  professorId String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @default(now())
+  deletedAt   DateTime?
+  professor   User                @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  comments    AssignmentComment[]
+  likes       AssignmentLikes[]
+}
+
+model AssignmentLikes {
+  userId       String
+  assignmentId String
+  liked        Boolean    @default(false)
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@id([userId, assignmentId])
+}
+
+model AssignmentComment {
+  id           String     @id @default(uuid())
+  assignmentId String
+  userId       String
+  content      String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+  deletedAt    DateTime?
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+}
+
+model Turma {
+  id          String       @id @default(uuid())
+  name        String
+  description String?
+  professorId String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now())
+  professor   User         @relation(fields: [professorId], references: [id])
+  alunos      TurmaAluno[]
+}
+
+model TurmaAluno {
+  id        String   @id @default(uuid())
+  turmaId   String
+  userId    String
+  createdAt DateTime @default(now())
+  turma     Turma    @relation(fields: [turmaId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([turmaId, userId])
 }
 
 enum Role {
@@ -19,280 +260,7 @@ enum ReviewVisibility {
   PROFESSOR_ONLY
 }
 
-model User {
-  id       String  @id @default(uuid())
-  name     String
-  role     Role    @default(USER)
-  email    String  @unique
-  password String
-  avatar   String?
-
-  reviews  Review[]
-  reading  ReadingTracking[]
-  borrowed BorrowedBook[]
-
-  approved          Boolean             @default(false)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @default(now())
-  RequestLending    RequestLending[]
-  Post              Post[]
-  PostLikes         PostLikes[]
-  FavoritedBooks    FavoritedBooks[]
-  Collection        Collection[]
-  Assignment        Assignment[]
-  AssignmentLikes   AssignmentLikes[]
-  PostComment       PostComment[]
-  AssignmentComment AssignmentComment[]
-  Turma             Turma[]
-  TurmaAluno        TurmaAluno[]
-}
-
-model Book {
-  id          String  @id @default(uuid())
-  title       String  @unique
-  description String
-  author      String
-  source      String
-  cover       String
-  genre       String
-  pages       Int
-  enabled     Boolean @default(true)
-  fileUrl     String
-  volume      Int?
-  edition     Int?
-  hasPhysicalCopy      Boolean @default(false)
-  physicalCopyQuantity Int?
-
-  reviews  Review[]
-  reading  ReadingTracking[]
-  borrowed BorrowedBook[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  sentAt         DateTime?
-  RequestLending RequestLending[]
-  Post           Post[]
-  FavoritedBooks FavoritedBooks[]
-  Collection     Collection?      @relation(fields: [collectionId], references: [id])
-  collectionId   String?
-
-  @@unique([title, author])
-}
-
-model Review {
-  id     String @id @default(uuid())
-  userId String
-  bookId String
-
-  title      String
-  borrowDate DateTime
-  returnDate DateTime
-
-  visibility ReviewVisibility @default(PUBLIC)
-
-  approved Boolean @default(false)
-  finished Boolean @default(false)
-
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
-
-model ReadingTracking {
-  id        String    @id @default(uuid())
-  userId    String
-  bookId    String
-  page      Int       @default(0)
-  deadline  DateTime?
-  startedAt DateTime  @default(now())
-  finished  Boolean   @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
-}
-
-model BorrowedBook {
-  id         String   @id @default(uuid())
-  userId     String
-  bookId     String
-  borrowDate DateTime
-  returnDate DateTime
-  returned   Boolean  @default(false)
-
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
-
-  extensionRequests RequestExtension[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  @@unique([userId, bookId, borrowDate])
-}
-
-model RequestLending {
-  id              String    @id @default(uuid())
-  userId          String
-  bookId          String
-  requestAt       DateTime
-  lendingDuration Int
-  approved        Boolean   @default(false)
-  approvedAt      DateTime?
-
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
-
-  createdAt DateTime @default(now())
-}
-
-model RequestExtension {
-  id        String  @id @default(uuid())
-  lendingId String
-  extraTime Int
-  approved  Boolean @default(false)
-
-  lending   BorrowedBook @relation(fields: [lendingId], references: [id])
-  createdAt DateTime     @default(now())
-}
-
-model Post {
-  id              String @id @default(uuid())
-  content         String
-  userId          String
-  bookId          String
-  rating          Int
-  readingProgress Int
-
-  visibility PostVisibility @default(PUBLIC)
-
-  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  book  Book        @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  likes PostLikes[]
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
-
-  PostComment PostComment[]
-}
-
 enum PostVisibility {
   PUBLIC
   PROFESSOR_ONLY
-}
-
-model PostLikes {
-  userId String
-  postId String
-  liked  Boolean @default(false)
-
-  user User @relation(fields: [userId], references: [id])
-  post Post @relation(fields: [postId], references: [id])
-
-  @@id([userId, postId])
-}
-
-model PostComment {
-  id      String @id @default(uuid())
-  postId  String
-  userId  String
-  content String
-
-  user User @relation(fields: [userId], references: [id])
-  post Post @relation(fields: [postId], references: [id])
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
-}
-
-model FavoritedBooks {
-  userId String
-  bookId String
-
-  user User @relation(fields: [userId], references: [id])
-  book Book @relation(fields: [bookId], references: [id])
-
-  @@id([userId, bookId])
-}
-
-model Collection {
-  id     String @id @default(uuid())
-  name   String
-  userId String
-
-  user User @relation(fields: [userId], references: [id])
-
-  books Book[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
-
-model Assignment {
-  id          String              @id @default(uuid())
-  content     String
-  professorId String
-  likes       AssignmentLikes[]
-  comments    AssignmentComment[]
-
-  professor User @relation(fields: [professorId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
-}
-
-model AssignmentLikes {
-  userId       String
-  assignmentId String
-  liked        Boolean @default(false)
-
-  user       User       @relation(fields: [userId], references: [id])
-  assignment Assignment @relation(fields: [assignmentId], references: [id])
-
-  @@id([userId, assignmentId])
-}
-
-model AssignmentComment {
-  id           String     @id @default(uuid())
-  userId       String
-  assignmentId String
-  content      String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now())
-  deletedAt    DateTime?
-
-  user       User       @relation(fields: [userId], references: [id])
-  assignment Assignment @relation(fields: [assignmentId], references: [id])
-}
-
-model Turma {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  professorId String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-
-  professor User        @relation(fields: [professorId], references: [id])
-  alunos    TurmaAluno[]
-}
-
-model TurmaAluno {
-  id       String @id @default(uuid())
-  turmaId  String
-  userId   String
-  createdAt DateTime @default(now())
-
-  turma Turma @relation(fields: [turmaId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([turmaId, userId])
 }

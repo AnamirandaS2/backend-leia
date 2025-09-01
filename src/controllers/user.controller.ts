@@ -14,6 +14,7 @@ import updateService from "../services/user/update.service";
 import { v4 } from "uuid";
 import deleteAvatar from "../services/user/deleteAvatar.service";
 import getApprovedStudentsService from "../services/user/getApprovedStudents.service";
+import updateProfileService from "../services/user/updateProfile.service";
 
 export async function registerController(req: Request, res: Response) {
   const { name, email, password, role } = req.body as yup.InferType<
@@ -93,6 +94,18 @@ export async function updateController(req: Request, res: Response) {
   return res.status(200).json(user);
 }
 
+export async function updateProfileController(req: Request, res: Response) {
+  const { id: userId } = req.user as { id: string };
+  const { name, avatar } = req.body;
+
+  try {
+    const updatedUser = await updateProfileService({ userId, name, avatar });
+    return res.status(200).json(updatedUser);
+  } catch (error: any) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+
 export async function validateToken(req: Request, res: Response) {
   const { authorization } = req.headers;
   if (!authorization) return res.status(401).send(false);
@@ -121,6 +134,12 @@ export async function getCurrentUserController(req: Request, res: Response) {
   } catch (error: any) {
     return res.status(400).json({ message: error.message });
   }
+}
+
+export function refreshTokenController(req: Request, res: Response) {
+  const { id } = req.user as { id: string };
+  const token = generateToken(id);
+  return res.status(200).json({ token });
 }
 
 export async function getApprovedStudentsController(

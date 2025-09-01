@@ -57,6 +57,7 @@ export default async function registerLendingService(
     data: {
       userId: studentId,
       bookId: bookId,
+      professorId: professorId,
       borrowDate: new Date(),
       returnDate: new Date(returnDate),
       returned: false,

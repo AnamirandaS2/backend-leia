@@ -40,7 +40,6 @@ export default async function returnBookService(
     where: { id: lendingId },
     data: {
       returned: true,
-      returnedAt: new Date(),
     },
   });
 
