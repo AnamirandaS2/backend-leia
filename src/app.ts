@@ -14,6 +14,7 @@ import review from "./routes/review.route.";
 import support from "./routes/support.route";
 import user from "./routes/user.route";
 import turma from "./routes/turma.route";
+import quote from "./routes/quote.routes";
 import swaggerDocs from "./swagger-output.json";
 import collections from "./routes/collections.route";
 import assignments from "./routes/assignments.route";
@@ -31,7 +32,7 @@ app.use(
       "http://127.0.0.1:5173",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -61,6 +62,7 @@ app.use("/posts", posts);
 app.use("/collections", collections);
 app.use("/assignments", assignments);
 app.use("/turmas", turma);
+app.use("/quotes", quote);
 
 app.use(errorHandler);
 

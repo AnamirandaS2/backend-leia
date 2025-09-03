@@ -249,6 +249,17 @@ model TurmaAluno {
   @@unique([turmaId, userId])
 }
 
+model Quote {
+  id        String   @id @default(uuid())
+  quote     String
+  author    String
+  source    String
+  curiosity String?
+  date      DateTime @unique // Data única para garantir uma citação por dia
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
 enum Role {
   USER
   PROFESSOR

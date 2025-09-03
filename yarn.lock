@@ -1447,10 +1447,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@prisma/client@^6.3.1":
-  version "6.3.1"
-  resolved "https://registry.npmjs.org/@prisma/client/-/client-6.3.1.tgz"
-  integrity sha512-ARAJaPs+eBkemdky/XU3cvGRl+mIPHCN2lCXsl5Vlb0E2gV+R6IN7aCI8CisRGszEZondwIsW9Iz8EJkTdykyA==
+"@prisma/client@^6.15.0":
+  version "6.15.0"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-6.15.0.tgz#c4166aa8492878c842e63c515853d7a4125e6168"
+  integrity sha512-wR2LXUbOH4cL/WToatI/Y2c7uzni76oNFND7+23ypLllBmIS8e3ZHhO+nud9iXSXKFt1SoM3fTZvHawg63emZw==
 
 "@prisma/debug@6.3.1":
   version "6.3.1"
