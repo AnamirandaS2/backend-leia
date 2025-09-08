@@ -33,6 +33,8 @@ export default async function checkLogin(
     id: user.id,
     name: user.name,
     email: user.email,
+    role: user.role,
+    approved: user.approved,
   };
 
   next();

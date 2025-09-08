@@ -6,18 +6,15 @@ import { AppError } from '../../error';
 export async function checkBookInCollection(req: Request, res: Response, next: NextFunction): Promise<void> {
   const { bookId } = req.body;
 
-  const book = await prisma.collection.findFirst({ 
-    where: { 
-      id: req.params.id,
-      books: {
-        some: {
-          id: bookId
-        }
-      }
-    } 
+  // Verifica se o livro pertence à coleção e obtém o próprio livro
+  const book = await prisma.book.findFirst({
+    where: {
+      id: bookId,
+      collectionId: req.params.id,
+    },
   });
 
-  if(!book) throw new AppError('Livro não pertence à coleção', 404);
+  if (!book) throw new AppError('Livro não pertence à coleção', 404);
 
   req.book = book;
 

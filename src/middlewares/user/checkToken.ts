@@ -16,7 +16,7 @@ export default async function checkToken(
   if (!token) throw new AppError("Token não informado", 401);
 
   let userId = "";
-  req.user = {};
+  // req.user será preenchido após validação do token
 
   try {
     userId = (verify(token, process.env.JWT_SECRET as string) as { id: string })
