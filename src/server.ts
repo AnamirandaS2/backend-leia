@@ -1,8 +1,9 @@
-import app from './app';
-import 'dotenv/config';
+import app from "./app";
+import "dotenv/config";
 
-app.listen(
-  Number(process.env.PORT), 
-    process.env.HOST as string, 
-    ()=> {console.log(`[SERVER IS ON] Server running on port ${process.env.PORT}`);}
-);
+const port = Number(process.env.PORT) || 3001;
+const host = (process.env.HOST as string) || "0.0.0.0";
+
+app.listen(port, host, () => {
+  console.log(`[SERVER IS ON] Server running on http://${host}:${port}`);
+});
