@@ -31,6 +31,9 @@ app.use(
         "http://localhost:5173",
         "http://localhost:3000",
         "http://127.0.0.1:5173",
+        "http://192.168.0.12:5173",
+        "http://192.168.0.12:4173",
+        "http://192.168.0.12:3000",
         process.env.FRONTEND_URL,
       ].filter(Boolean) as string[];
       if (!origin || allowed.includes(origin)) return callback(null, true);
