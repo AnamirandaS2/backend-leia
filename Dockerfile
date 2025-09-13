@@ -32,6 +32,10 @@ RUN yarn install --production=true && yarn cache clean
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
+# Copiar script de inicialização
+COPY start.sh ./
+RUN chmod +x start.sh
+
 # Criar diretório para uploads
 RUN mkdir -p /app/public/images && chown -R nextjs:nodejs /app/public
 
@@ -42,4 +46,4 @@ USER nextjs
 EXPOSE 3000
 
 # Comando de inicialização
-CMD ["yarn", "dev"]
+CMD ["./start.sh"]
