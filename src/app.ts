@@ -23,22 +23,10 @@ import path from "path";
 
 const app = express();
 
-// Configuração específica do CORS
+// Configuração do CORS - permite acesso de qualquer origem
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowed = [
-        "http://localhost:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:5173",
-        "http://192.168.0.12:5173",
-        "http://192.168.0.12:4173",
-        "http://192.168.0.12:3000",
-        process.env.FRONTEND_URL,
-      ].filter(Boolean) as string[];
-      if (!origin || allowed.includes(origin)) return callback(null, true);
-      return callback(new Error(`Origin not allowed by CORS: ${origin}`));
-    },
+    origin: true, // Permite qualquer origem
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
