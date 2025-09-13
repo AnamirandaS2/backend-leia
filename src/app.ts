@@ -72,6 +72,18 @@ app.use("/assignments", assignments);
 app.use("/turmas", turma);
 app.use("/quotes", quote);
 
+// Rota de saúde da API
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    message: "API está funcionando corretamente",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development",
+    version: "1.0.0",
+  });
+});
+
 app.use(errorHandler);
 
 export default app;
