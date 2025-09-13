@@ -1,4 +1,3 @@
-# Configuração específica para Coolify
 version: '3.8'
 
 services:
@@ -6,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend-leia
     restart: unless-stopped
     expose:
       - "3000"
@@ -14,8 +12,16 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - HOST=0.0.0.0
-    env_file:
-      - .env
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - EMAIL_FROM=${EMAIL_FROM}
     volumes:
       - ./public:/app/public
     healthcheck:
@@ -26,8 +32,6 @@ services:
       start_period: 60s
     networks:
       - coolify
-    labels:
-      - "coolify.managed=true"
 
 networks:
   coolify:

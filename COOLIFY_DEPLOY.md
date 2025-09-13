@@ -13,7 +13,8 @@
 1. Acesse seu painel do Coolify
 2. Clique em "New Application"
 3. Selecione "Docker Compose"
-4. Cole o conteúdo do `docker-compose.yml`
+4. **Use o arquivo `docker-compose.coolify.yml`** (otimizado para Coolify)
+5. Ou cole o conteúdo do `docker-compose.yml` se preferir
 
 ### 2. Configurar Variáveis de Ambiente
 
@@ -105,6 +106,14 @@ npx prisma generate
 - Requests na aba "Analytics"
 
 ## 🔧 Troubleshooting
+
+### ❌ Erro: "port is already allocated"
+**Problema**: A porta 3000 já está sendo usada por outro container.
+
+**Solução**:
+1. Use o arquivo `docker-compose.coolify.yml` em vez do `docker-compose.yml`
+2. Ou remova a linha `container_name` do docker-compose.yml
+3. O Coolify gerenciará automaticamente as portas
 
 ### Erro de Conexão com Banco
 1. Verifique se `DATABASE_URL` está correto
