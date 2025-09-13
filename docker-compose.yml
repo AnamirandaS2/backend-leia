@@ -6,14 +6,17 @@ services:
     container_name: backend-leia
     restart: unless-stopped
     ports:
-      - '3001:3000'
+      - '3000:3000'
     environment:
       # --- Suas variáveis de ambiente ---
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - SKIP_MIGRATIONS=true
+      - DIRECT_URL=${DIRECT_URL}
       - SUPABASE_URL=${SUPABASE_URL}
       - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_KEY=${SUPABASE_KEY:-dummy}
       - EMAIL_HOST=${EMAIL_HOST}
       - EMAIL_PORT=${EMAIL_PORT}
       - EMAIL_USER=${EMAIL_USER}

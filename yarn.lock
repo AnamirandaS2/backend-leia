@@ -5003,7 +5003,7 @@ performance-now@^2.1.0:
 
 phantomjs-prebuilt@^2.1.16:
   version "2.1.16"
-  resolved "https://registry.npmjs.org/phantomjs-prebuilt/-/phantomjs-prebuilt-2.1.16.tgz"
+  resolved "https://registry.npmmirror.com/phantomjs-prebuilt/-/phantomjs-prebuilt-2.1.16.tgz#efd212a4a3966d3647684ea8ba788549be2aefef"
   integrity sha512-PIiRzBhW85xco2fuj41FmsyuYHKjKuXWmhjy3A/Y+CMpN/63TV+s9uzfVhsUwFe0G77xWtHBG8xmXf5BqEUEuQ==
   dependencies:
     es6-promise "^4.0.3"

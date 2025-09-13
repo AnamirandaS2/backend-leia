@@ -37,19 +37,23 @@ export default async function sendReviewService({ emails, review, user }: Suppor
 
   const date = new Date();
   
-  await createReviewPdfService({ reviewTitle, name, bookTitle, bookAuthor, content, date });
+  const pdfResult: any = await createReviewPdfService({ reviewTitle, name, bookTitle, bookAuthor, content, date });
   
   await transporter.sendMail(
     {
       from: process.env.SMTP_USER,
       to: emails,
       subject: `Conclusão de resenha - ${review.title} - ${ user.name }`,
-      attachments: [
-        {
-          filename: parseFilename('pdf', name, reviewTitle),
-          content: `./src/templates/${parseFilename('pdf', name, reviewTitle)}`
-        }
-      ],
+      attachments: (
+        pdfResult && !pdfResult.skipped
+          ? [
+              {
+                filename: parseFilename('pdf', name, reviewTitle),
+                content: `./src/templates/${parseFilename('pdf', name, reviewTitle)}`
+              }
+            ]
+          : []
+      ),
       html: `
         <h1>${reviewTitle}</h2>
         <h2>Autoria de: ${name}</h3>
@@ -63,6 +67,8 @@ export default async function sendReviewService({ emails, review, user }: Suppor
     }
   );
 
-  await fs.rm(`src/templates/${parseFilename('pdf', name, reviewTitle)}`);
+  if (!(pdfResult && pdfResult.skipped)) {
+    await fs.rm(`src/templates/${parseFilename('pdf', name, reviewTitle)}`);
+  }
   await prisma.review.update({ where: { id: review.id }, data: { finished: true } });
 }

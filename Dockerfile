@@ -9,6 +9,9 @@ RUN apk add --no-cache \
 # Definir diretório de trabalho
 WORKDIR /app
 
+# Evitar download do PhantomJS (não disponível para linux/arm64)
+ENV PHANTOMJS_SKIP_DOWNLOAD=true
+
 # Copiar arquivos de dependências
 COPY package*.json ./
 COPY yarn.lock ./

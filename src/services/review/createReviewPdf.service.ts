@@ -1,6 +1,14 @@
 import fs from 'fs';
 
-import pdf from 'pdf-creator-node';
+let pdf: any;
+try {
+  // Alguns ambientes (linux/arm64) não possuem phantomjs; evita crash
+  // ao tentar importar em runtime.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  pdf = require('pdf-creator-node');
+} catch (err) {
+  pdf = null;
+}
 
 import parseFilename from '../../utils/parseFilename';
 
@@ -14,6 +22,10 @@ interface ReviewProps {
 }
 
 export default async function createReviewPdfService({ bookTitle, content, date, name, reviewTitle, bookAuthor }: ReviewProps) {
+  if (!pdf) {
+    // Pula geração de PDF quando a dependência não está disponível
+    return { skipped: true } as any;
+  }
   const html = fs.readFileSync('src/templates/reviewPdf.html', 'utf8');
   const options = {
     format: 'A4',
