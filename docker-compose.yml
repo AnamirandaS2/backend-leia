@@ -1,18 +1,14 @@
-version: '3.8'
-
 services:
-  backend-leia:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: backend-leia
     restart: unless-stopped
-    expose:
-      - "3000"
+    ports:
+      - '3000:3000'
     environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - HOST=0.0.0.0
+      # --- Suas variáveis de ambiente ---
       - DATABASE_URL=${DATABASE_URL}
       - JWT_SECRET=${JWT_SECRET}
       - SUPABASE_URL=${SUPABASE_URL}
@@ -23,17 +19,6 @@ services:
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_PASS=${EMAIL_PASS}
       - EMAIL_FROM=${EMAIL_FROM}
-    volumes:
-      - ./public:/app/public
-    networks:
-      - leia-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-networks:
-  leia-network:
-    driver: bridge
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
